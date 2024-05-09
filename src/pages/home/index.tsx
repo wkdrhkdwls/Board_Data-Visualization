@@ -1,9 +1,12 @@
+import Layout from '@/components/layout/layout';
+
 export default function Home() {
   return (
-    <div className="flex-1 flex-col w-full flex justify-center">
-      <main className="max-w-[430px] w-full bg-white  relative mx-auto">
-        <div className="relative w-full h-screen overflow-hidden">hu</div>
-      </main>
-    </div>
+    <Layout>
+      <div className="w-full h-full flex justify-center flex-col">
+        <p>hi</p>
+        <p>hi</p>
+      </div>
+    </Layout>
   );
 }
