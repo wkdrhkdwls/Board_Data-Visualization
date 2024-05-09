@@ -3,7 +3,7 @@ const Footer = () => {
     <div className="w-full h-auto font-bold bg-white border-t border-gray-200">
       <div
         id="sectorOne"
-        className="container mx-auto px-4 my-28 flex flex-col sm:flex-row justify-between items-start py-4"
+        className="container mx-auto px-4 my-28 flex flex-col mobile:flex-row justify-between items-start py-4"
       >
         <p className="text-base font-bold">개발자 테스트용</p>
         <div className="text-sm space-y-1">
@@ -19,9 +19,9 @@ const Footer = () => {
       </div>
       <div
         id="sectorTwo"
-        className="container font-semibold mx-auto px-4 flex flex-col sm:flex-row justify-center items-center border-t border-gray-200"
+        className="container font-semibold mx-auto px-4 flex flex-col mobile:flex-row justify-center items-center border-t border-gray-200"
       >
-        <div className="flex flex-col sm:flex-row text-[10px] text-black space-x-0 sm:space-x-4 mt-2">
+        <div className="flex flex-col mobile:flex-row text-[10px] text-black space-x-0 mobile:space-x-4 mt-2">
           <p>이용약관</p>
           <p>개인정보처리방침</p>
         </div>

@@ -26,18 +26,18 @@ const Header = () => {
       <div className="flex justify-between items-center h-auto px-4">
         <div className="flex items-center">
           <div>
-            <button onClick={toggleMobileMenu} className="text-xl font-bold md:hidden mr-4">
+            <button onClick={toggleMobileMenu} className="text-xl font-bold mobile:hidden mr-4">
               ☰
             </button>
           </div>
-          <div className="flex justify-end items-center md:hidden">
+          <div className="flex justify-end items-center mobile:hidden">
             <Button onClick={handleHome} className="text-2xl font-bold text-[#ee3918] z-10">
               Testsite
             </Button>
           </div>
         </div>
 
-        <div className="hidden md:flex justify-around w-full">
+        <div className="hidden mobile:flex justify-around w-full">
           <div className="flex items-center">
             <Button onClick={handleHome} className="text-2xl font-bold text-[#ee3918] z-10">
               Testsite
