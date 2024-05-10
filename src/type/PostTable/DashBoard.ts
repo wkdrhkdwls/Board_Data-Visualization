@@ -8,3 +8,17 @@ export interface PostDTO {
   created_at: Date;
   views: number;
 }
+
+export interface DashBoardTableDTO {
+  posts: PostDTO[];
+  totalPages: number;
+  currentPage: number;
+  handlePrevious: () => void;
+  handleNext: () => void;
+  setCurrentPage: (page: number) => void;
+}
+
+export interface FetchDataDTo {
+  posts: PostDTO[];
+  total: number;
+}
