@@ -9,6 +9,7 @@ import { SignUpFormInputDTO } from '@/type/SignUp/Signup';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 
+// 회원가입 폼 유효성 검사
 const signUpFormSchema = z
   .object({
     email: z.string().email({ message: '이메일 형태이어야합니다.' }),
@@ -27,7 +28,10 @@ const signUpFormSchema = z
   });
 
 const SignUpPage = () => {
+  // 페이지 이동
   const navigate = useNavigate();
+
+  // react-hook-form을 사용한 회원가입 폼
   const {
     register,
     handleSubmit,
@@ -36,6 +40,7 @@ const SignUpPage = () => {
     resolver: zodResolver(signUpFormSchema),
   });
 
+  // 회원가입 완료 & 회원가입 완료 페이지로 이동
   const signupHandler: SubmitHandler<SignUpFormInputDTO> = () => {
     navigate('/signup-complete');
   };
