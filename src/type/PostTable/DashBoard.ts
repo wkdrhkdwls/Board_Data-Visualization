@@ -1,4 +1,4 @@
-export interface PostDTO {
+export type PostDTO ={
   id: number;
   title: string;
   content: string;
@@ -9,7 +9,7 @@ export interface PostDTO {
   views: number;
 }
 
-export interface DashBoardTableDTO {
+export type DashBoardTableDTO ={
   posts: PostDTO[];
   totalPages: number;
   currentPage: number;
@@ -18,7 +18,7 @@ export interface DashBoardTableDTO {
   setCurrentPage: (page: number) => void;
 }
 
-export interface FetchDataDTo {
+export type FetchDataDTo ={
   posts: PostDTO[];
   total: number;
 }
