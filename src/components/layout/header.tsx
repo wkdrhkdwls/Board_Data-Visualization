@@ -10,6 +10,10 @@ const Header = () => {
   const handleHome = () => {
     navigate('/');
   };
+  // 로그인으로 이동
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
   // 모바일 메뉴 토글
   const toggleMobileMenu = () => {
@@ -30,25 +34,15 @@ const Header = () => {
             <button onClick={toggleMobileMenu} className="text-xl font-bold mr-4">
               ☰
             </button>
-            <Button
-              onClick={handleHome}
-              className="bg-white text-2xl font-bold text-[#ee3918] z-10"
-            >
-              Testsite
-            </Button>
+            <p className="bg-white text-2xl font-bold text-[#ee3918] z-10">Testsite</p>
           </div>
         </div>
 
         {/* 태블릿 이상의 화면에서만 보이는 전체 메뉴 */}
         <div className="tablet:flex desktop:flex hidden justify-around w-full">
           <div className="flex items-center">
-            <Button
-              onClick={handleHome}
-              className="bg-white text-2xl font-bold text-[#ee3918] z-10"
-            >
-              Testsite
-            </Button>
-            <Button onClick={() => {}} className="bg-white text-black text-lg mx-2">
+            <p className="bg-white text-2xl font-bold text-[#ee3918] z-10">Testsite</p>
+            <Button onClick={handleHome} className="bg-white text-black text-lg mx-2">
               게시판
             </Button>
             <Button onClick={() => {}} className="bg-white text-black text-lg mx-2">
@@ -56,7 +50,10 @@ const Header = () => {
             </Button>
           </div>
           <div>
-            <Button className="text-lg bg-white font-bold text-[#272727] border-[1px] border-[#E1E1E1] mx-2">
+            <Button
+              onClick={handleLogin}
+              className="text-lg bg-white font-bold text-[#272727] border-[1px] border-[#E1E1E1] mx-2"
+            >
               로그인
             </Button>
           </div>
@@ -66,7 +63,9 @@ const Header = () => {
         <div className="fixed inset-0 bg-black bg-opacity-75 z-40" onClick={closeMobileMenu}>
           <div className="bg-white h-full w-2/3 p-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-col font-bold text-black">
-              <Button className=" bg-white text-black text-lg my-4">로그인</Button>
+              <Button onClick={handleLogin} className="bg-white text-black text-lg my-4">
+                로그인
+              </Button>
               <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">
                 게시판
               </Button>
