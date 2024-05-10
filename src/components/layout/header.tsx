@@ -25,12 +25,11 @@ const Header = () => {
     <div className="w-full h-auto py-5 bg-white border-b border-gray-200">
       <div className="flex justify-between items-center h-auto px-4">
         <div className="flex items-center">
-          <div>
-            <button onClick={toggleMobileMenu} className="text-xl font-bold mobile:hidden mr-4">
+          {/* 모바일에서만 보이는 메뉴 버튼과 Testsite 버튼 */}
+          <div className="mobile:block hidden">
+            <button onClick={toggleMobileMenu} className="text-xl font-bold mr-4">
               ☰
             </button>
-          </div>
-          <div className="flex justify-end items-center mobile:hidden">
             <Button
               onClick={handleHome}
               className="bg-white text-2xl font-bold text-[#ee3918] z-10"
@@ -40,7 +39,8 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="hidden mobile:flex justify-around w-full">
+        {/* 태블릿 이상의 화면에서만 보이는 전체 메뉴 */}
+        <div className="tablet:flex desktop:flex hidden justify-around w-full">
           <div className="flex items-center">
             <Button
               onClick={handleHome}

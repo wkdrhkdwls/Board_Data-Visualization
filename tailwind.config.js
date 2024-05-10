@@ -21,9 +21,9 @@ module.exports = {
       },
     },
     screens: {
-      mobile: '320px',
-      tablet: '1300px',
-      desktop: '1920px',
+      mobile: { max: '320px' },
+      tablet: { min: '321px', max: '1300px' },
+      desktop: { min: '1301px' },
     },
     extend: {
       colors: {

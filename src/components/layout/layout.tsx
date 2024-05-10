@@ -9,7 +9,7 @@ const Layout = ({ children }: LayoutProp) => {
   return (
     <>
       <Header />
-      <main className="overflow-hidden scrollbar-hide w-full h-full bg-white mx-auto">
+      <main className="overflow-y-hidden scrollbar-hide w-full h-full bg-white mx-auto">
         {children}
       </main>
       <Footer />
