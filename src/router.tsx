@@ -6,11 +6,15 @@ import NotFoundPage from '@/pages/error/components/NotFoundPage';
 import Home from '@/pages/home';
 
 import { Toaster } from './components/ui/toaster';
-import LoginPage from '@/pages/Login/Login';
+import LoginPage from '@/pages/Login';
+import SignUpPage from '@/pages/SignUP';
+import SignUpCompletePage from '@/pages/SignUpComplete';
 
 const pageRoutes = {
   main: '/',
   login: '/login',
+  signUp: '/signup',
+  signUpComplete: '/signup-complete',
 };
 
 const CommonLayout = () => (
@@ -35,6 +39,26 @@ const router = createBrowserRouter([
     element: <CommonLayout />,
     children: [
       { path: pageRoutes.login, element: <LoginPage />, errorElement: <ErrorPage /> },
+
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+  {
+    element: <CommonLayout />,
+    children: [
+      { path: pageRoutes.signUp, element: <SignUpPage />, errorElement: <ErrorPage /> },
+
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+  {
+    element: <CommonLayout />,
+    children: [
+      {
+        path: pageRoutes.signUpComplete,
+        element: <SignUpCompletePage />,
+        errorElement: <ErrorPage />,
+      },
 
       { path: '*', element: <NotFoundPage /> },
     ],
