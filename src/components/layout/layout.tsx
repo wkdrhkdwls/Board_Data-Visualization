@@ -7,11 +7,13 @@ interface LayoutProp {
 
 const Layout = ({ children }: LayoutProp) => {
   return (
-    <main className="overflow-hidden scrollbar-hide w-full bg-white  mx-auto">
+    <>
       <Header />
-      {children}
+      <main className="w-full h-screen bg-white mx-auto overflow-hidden scrollbar-hide ">
+        {children}
+      </main>
       <Footer />
-    </main>
+    </>
   );
 };
 
