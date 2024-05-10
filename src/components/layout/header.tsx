@@ -31,7 +31,10 @@ const Header = () => {
             </button>
           </div>
           <div className="flex justify-end items-center mobile:hidden">
-            <Button onClick={handleHome} className="text-2xl font-bold text-[#ee3918] z-10">
+            <Button
+              onClick={handleHome}
+              className="bg-white text-2xl font-bold text-[#ee3918] z-10"
+            >
               Testsite
             </Button>
           </div>
@@ -39,13 +42,16 @@ const Header = () => {
 
         <div className="hidden mobile:flex justify-around w-full">
           <div className="flex items-center">
-            <Button onClick={handleHome} className="text-2xl font-bold text-[#ee3918] z-10">
+            <Button
+              onClick={handleHome}
+              className="bg-white text-2xl font-bold text-[#ee3918] z-10"
+            >
               Testsite
             </Button>
-            <Button onClick={() => {}} className="text-lg mx-2">
+            <Button onClick={() => {}} className="bg-white text-black text-lg mx-2">
               게시판
             </Button>
-            <Button onClick={() => {}} className="text-lg mx-2">
+            <Button onClick={() => {}} className="bg-white text-black text-lg mx-2">
               대시보드
             </Button>
           </div>
@@ -60,11 +66,11 @@ const Header = () => {
         <div className="fixed inset-0 bg-black bg-opacity-75 z-40" onClick={closeMobileMenu}>
           <div className="bg-white h-full w-2/3 p-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-col font-bold text-black">
-              <Button className="text-lg my-4">로그인</Button>
-              <Button onClick={() => {}} className="text-lg my-4">
+              <Button className=" bg-white text-black text-lg my-4">로그인</Button>
+              <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">
                 게시판
               </Button>
-              <Button onClick={() => {}} className="text-lg my-4">
+              <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">
                 대시보드(모바일 불가)
               </Button>
             </div>
