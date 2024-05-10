@@ -48,10 +48,10 @@ export function DashBoardTable({
               <TableCell className="font-medium">{post.id}</TableCell>
               <TableCell>{post.title}</TableCell>
               <TableCell>{post.author}</TableCell>
-              <TableCell className="text-right mobile:hidden">
+              <TableCell className="text-center mobile:hidden">
                 {new Date(post.created_at).toLocaleDateString()}
               </TableCell>
-              <TableCell className="text-right mobile:hidden">{post.views}</TableCell>
+              <TableCell className="text-center mobile:hidden">{post.views}</TableCell>
             </TableRow>
           ))}
         </TableBody>

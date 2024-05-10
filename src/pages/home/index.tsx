@@ -4,6 +4,7 @@ import { DashBoardTable } from '@/utils/DashBoardTable';
 import { createClient } from '@supabase/supabase-js';
 import { useQuery } from '@tanstack/react-query';
 import { FetchDataDTo } from '@/type/PostTable/DashBoard';
+import DashBoardHeader from '@/components/DashBoard/DashBoardHeader';
 
 // Supabase 연결 설정
 const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
@@ -32,6 +33,9 @@ function Home() {
   const { data } = useQuery({
     queryKey: ['posts', currentPage],
     queryFn: () => fetchPosts(currentPage),
+    placeholderData: (previousData) => previousData, //이전 데이터 유지
+    staleTime: 1000 * 60 * 5, // refresh 5분
+    gcTime: 10 * 60 * 1000, //캐시 테이터 10분
   });
 
   // 전체 페이지 수 계산
@@ -44,15 +48,18 @@ function Home() {
 
   return (
     <Layout>
-      <div className="mx-[390px] mobile:mx-2 tablet:mx-[20px] flex justify-center flex-col">
-        <DashBoardTable
-          posts={data?.posts || []}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          handlePrevious={handlePrevious}
-          handleNext={handleNext}
-          setCurrentPage={setCurrentPage}
-        />
+      <div className="my-10">
+        <DashBoardHeader />
+        <div className="mx-[390px] mobile:mx-2 tablet:mx-[20px] flex justify-center flex-col">
+          <DashBoardTable
+            posts={data?.posts || []}
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePrevious={handlePrevious}
+            handleNext={handleNext}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
       </div>
     </Layout>
   );
