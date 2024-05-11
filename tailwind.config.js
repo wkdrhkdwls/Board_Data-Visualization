@@ -15,7 +15,15 @@ module.exports = {
       padding: '2rem',
       screens: {
         '2xl': '1400px',
+        mobile: '320px',
+        tablet: '1300px',
+        desktop: '1920px',
       },
+    },
+    screens: {
+      mobile: { max: '320px' },
+      tablet: { min: '321px', max: '1300px' },
+      desktop: { min: '1301px' },
     },
     extend: {
       colors: {
