@@ -11,7 +11,7 @@ const supabase = createClient(supabaseURL, supabaseKey);
 const Header = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cookies, setCookies] = useCookies(['access_token']);
+  const [cookies] = useCookies(['access_token']);
   const [nickname, setNickname] = useState('');
 
   const userId = localStorage.getItem('userId');
@@ -35,6 +35,7 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   };
 
+  // profiles 테이블에서 닉네임 가져오기
   useEffect(() => {
     if (accessToken && userId) {
       const fetchNickname = async () => {
@@ -43,7 +44,7 @@ const Header = () => {
             .from('profiles')
             .select('nickname')
             .eq('user_id', userId)
-            .single(); // Assumes `userId` uniquely identifies a profile
+            .single();
 
           if (error) throw error;
           if (data) setNickname(data.nickname);

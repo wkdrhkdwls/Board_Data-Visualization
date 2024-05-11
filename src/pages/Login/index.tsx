@@ -1,7 +1,6 @@
 import Layout from '@/components/layout/layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { createClient } from '@supabase/supabase-js';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
@@ -9,10 +8,7 @@ import { EyeFilled, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { LoginFormDTO } from '@/type/Login/Login';
 import { useToast } from '@/components/ui/use-toast';
-
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseURL, supabaseKey);
+import { supabase } from '@/hooks/supabase';
 
 const LoginPage = () => {
   const navigate = useNavigate();

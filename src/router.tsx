@@ -9,12 +9,14 @@ import { Toaster } from './components/ui/toaster';
 import LoginPage from '@/pages/Login';
 import SignUpPage from '@/pages/SignUP';
 import SignUpCompletePage from '@/pages/SignUpComplete';
+import CreatePostPage from '@/pages/CreatePost';
 
 const pageRoutes = {
   main: '/',
   login: '/login',
   signUp: '/signup',
   signUpComplete: '/signup-complete',
+  createPost: '/create-post',
 };
 
 const CommonLayout = () => (
@@ -57,6 +59,18 @@ const router = createBrowserRouter([
       {
         path: pageRoutes.signUpComplete,
         element: <SignUpCompletePage />,
+        errorElement: <ErrorPage />,
+      },
+
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+  {
+    element: <CommonLayout />,
+    children: [
+      {
+        path: pageRoutes.createPost,
+        element: <CreatePostPage />,
         errorElement: <ErrorPage />,
       },
 
