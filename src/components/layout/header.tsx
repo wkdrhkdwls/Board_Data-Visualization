@@ -1,11 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { useCookies } from 'react-cookie';
+
+const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseURL, supabaseKey);
 
 const Header = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [cookies, setCookies] = useCookies(['access_token']);
+  const [nickname, setNickname] = useState('');
 
+  const userId = localStorage.getItem('userId');
+  const accessToken = cookies.access_token;
   // 홈으로 이동
   const handleHome = () => {
     navigate('/');
@@ -24,6 +34,27 @@ const Header = () => {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
+
+  useEffect(() => {
+    if (accessToken && userId) {
+      const fetchNickname = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('nickname')
+            .eq('user_id', userId)
+            .single(); // Assumes `userId` uniquely identifies a profile
+
+          if (error) throw error;
+          if (data) setNickname(data.nickname);
+        } catch (error) {
+          console.error('Error fetching nickname:', error);
+        }
+      };
+
+      fetchNickname();
+    }
+  }, [accessToken, userId]);
 
   return (
     <div className="w-full h-auto py-5 bg-white border-b border-gray-200">
@@ -50,12 +81,18 @@ const Header = () => {
             </Button>
           </div>
           <div>
-            <Button
-              onClick={handleLogin}
-              className="text-lg bg-white font-bold text-[#272727] border-[1px] border-[#E1E1E1] mx-2"
-            >
-              로그인
-            </Button>
+            {nickname ? (
+              <Button className="text-lg  bg-white font-bold text-[#272727]  mx-2 pointer-events-none">
+                {nickname}
+              </Button>
+            ) : (
+              <Button
+                onClick={handleLogin}
+                className="text-lg bg-white font-bold text-[#272727] border-[1px] border-[#E1E1E1] mx-2"
+              >
+                로그인
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -63,9 +100,18 @@ const Header = () => {
         <div className="fixed inset-0 bg-black bg-opacity-75 z-40" onClick={closeMobileMenu}>
           <div className="bg-white h-full w-2/3 p-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-col font-bold text-black">
-              <Button onClick={handleLogin} className="bg-white text-black text-lg my-4">
-                로그인
-              </Button>
+              {nickname ? (
+                <Button className="text-lg bg-white font-bold text-[#272727]  mx-2 pointer-events-none">
+                  {nickname}
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleLogin}
+                  className="text-lg bg-white font-bold text-[#272727] border-[1px] border-[#E1E1E1] mx-2"
+                >
+                  로그인
+                </Button>
+              )}
               <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">
                 게시판
               </Button>
