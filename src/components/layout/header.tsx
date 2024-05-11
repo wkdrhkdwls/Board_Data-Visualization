@@ -1,21 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { useCookies } from 'react-cookie';
+import { useState } from 'react';
 
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseURL, supabaseKey);
+import { useAuth } from '@/hooks/useAuth';
 
 const Header = () => {
   const navigate = useNavigate();
+  const { nickname } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cookies] = useCookies(['access_token']);
-  const [nickname, setNickname] = useState('');
 
-  const userId = localStorage.getItem('userId');
-  const accessToken = cookies.access_token;
   // 홈으로 이동
   const handleHome = () => {
     navigate('/');
@@ -36,26 +29,6 @@ const Header = () => {
   };
 
   // profiles 테이블에서 닉네임 가져오기
-  useEffect(() => {
-    if (accessToken && userId) {
-      const fetchNickname = async () => {
-        try {
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('nickname')
-            .eq('user_id', userId)
-            .single();
-
-          if (error) throw error;
-          if (data) setNickname(data.nickname);
-        } catch (error) {
-          console.error('Error fetching nickname:', error);
-        }
-      };
-
-      fetchNickname();
-    }
-  }, [accessToken, userId]);
 
   return (
     <div className="w-full h-auto py-5 bg-white border-b border-gray-200">

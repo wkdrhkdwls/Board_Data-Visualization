@@ -1,16 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Layout from '@/components/layout/layout';
 import { useForm } from 'react-hook-form';
-import { useCookies } from 'react-cookie';
+
 import { supabase } from '@/hooks/supabase';
+import { useNavigate } from 'react-router-dom';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 const CreatePostPage = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
+  const { nickname, userId } = useAuth();
+  const [fileLabel, setFileLabel] = useState('');
+  const navigate = useNavigate();
 
-  const [cookies] = useCookies(['access_token']);
-  const [nickname, setNickname] = useState('');
-  const accessToken = cookies.access_token;
-  const userId = localStorage.getItem('userId');
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFileLabel(file.name);
+      setValue('fileAttachment', file.name, { shouldValidate: true });
+    }
+  };
 
   const handleCreatePost = async (formData: any) => {
     const { title, content, fileAttachment, hashtags } = formData;
@@ -33,31 +45,17 @@ const CreatePostPage = () => {
       alert('Failed to create post: ' + error.message);
     } else {
       console.log('Post created successfully:', data);
+      navigate('/');
       alert('Post created successfully!');
-      reset();
     }
   };
 
-  useEffect(() => {
-    if (accessToken && userId) {
-      const fetchNickname = async () => {
-        try {
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('nickname')
-            .eq('user_id', userId)
-            .single();
-
-          if (error) throw error;
-          if (data) setNickname(data.nickname);
-        } catch (error) {
-          console.error('Error fetching nickname:', error);
-        }
-      };
-
-      fetchNickname();
+  const openFileSelector = () => {
+    const fileInput = document.getElementById('fileAttachment') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
     }
-  }, [accessToken, userId]);
+  };
 
   return (
     <Layout>
@@ -67,45 +65,49 @@ const CreatePostPage = () => {
           className="w-full max-w-xl p-4 border rounded"
         >
           <div className="mb-4">
-            <label htmlFor="title">제목</label>
-            <input
+            <Label htmlFor="title">제목</Label>
+            <Input
               {...register('title', { required: true })}
               id="title"
               className="w-full p-2 border rounded"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="content">내용</label>
-            <textarea
+            <Label htmlFor="content">내용</Label>
+            <Textarea
               {...register('content', { required: true })}
               id="content"
               className="w-full p-2 border rounded"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="fileAttachment">파일첨부</label>
-            <input
+            <Label htmlFor="hashtags">파일 선택</Label>
+            <Input
               {...register('fileAttachment')}
               id="fileAttachment"
+              type="file"
+              onChange={handleFileChange}
+              className="w-full p-2 border-[1px] border-black rounded hidden"
+            />
+            <Input // 클릭 시 파일 입력을 활성화하는 텍스트 입력 필드
               type="text"
-              className="w-full p-2 border rounded"
+              onClick={openFileSelector}
+              value={fileLabel || '파일 선택'} // 파일 이름 또는 기본 텍스트 표시
+              readOnly
+              className="w-full p-2 border-[1px] border-black rounded cursor-pointer"
+              placeholder="파일 선택"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="hashtags">해시태그</label>
-            <input
+            <Label htmlFor="hashtags">해시태그</Label>
+            <Input
               {...register('hashtags')}
               id="hashtags"
               className="w-full p-2 border rounded"
               placeholder=",로 구분하여 입력하세요. 예) #miniIntern, #weirdSector"
             />
           </div>
-          <button
-            type="submit"
-            className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-          >
-            게시글 작성
-          </button>
+          <Button type="submit">게시글 작성</Button>
         </form>
       </div>
     </Layout>
