@@ -7,21 +7,19 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { EyeFilled, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { LoginFormDTO } from '@/type/Login/Login';
+import { useToast } from '@/components/ui/use-toast';
 
 const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseURL, supabaseKey);
 
-type LoginFormDTO = {
-  email: string;
-  password: string;
-};
-
 const LoginPage = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<LoginFormDTO>();
-  const [cookies, setCookies] = useCookies(['access_token']);
+  const [, setCookies] = useCookies(['access_token']);
   const [showPassword, setShowPassword] = useState(false);
+  const { toast } = useToast();
 
   const loginHandler: SubmitHandler<LoginFormDTO> = async (formData) => {
     try {
@@ -32,7 +30,13 @@ const LoginPage = () => {
 
       if (error) {
         console.error('로그인 에러 : ', error.message);
-        alert('로그인 실패 : ' + error.message);
+        toast({
+          variant: 'destructive',
+          title: '로그인 실패',
+          description: error.message,
+          duration: 2000,
+          className: 'flex item-center justify-center',
+        });
       } else if (data) {
         console.log('Login successful', data);
         localStorage.setItem('refresh_token', data.session.refresh_token);
@@ -40,6 +44,12 @@ const LoginPage = () => {
         setCookies('access_token', data.session.access_token, {
           path: '/',
           maxAge: data.session.expires_in,
+        });
+        toast({
+          title: '로그인 성공',
+          description: '로그인 성공했습니다.',
+          duration: 2000,
+          className: 'flex item-center justify-center',
         });
         navigate('/');
       }
