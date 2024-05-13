@@ -1,7 +1,8 @@
 import Layout from '@/components/layout/layout';
 import { supabase } from '@/hooks/supabase';
+import { useAuth } from '@/hooks/useAuth';
 import { PostDTO } from '@/type/PostTable/DashBoard';
-import { LeftOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -9,6 +10,7 @@ const DetailPostPage = () => {
   const { id } = useParams();
   const postId = Number(id);
   const navigate = useNavigate();
+  const { userId } = useAuth();
 
   const fetchPosts = async (postId: number): Promise<PostDTO> => {
     const { data, error } = await supabase.from('dashboard').select('*').eq('id', postId).single();
@@ -48,11 +50,18 @@ const DetailPostPage = () => {
     <Layout>
       {post && (
         <div className="p-4 max-w-5xl mx-auto text-black my-10">
-          <div className="flex flex-row font-extrabold">
-            <button onClick={() => navigate(-1)} className="mb-2 mr-2">
-              <LeftOutlined />
-            </button>
-            <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+          <div className="flex flex-row font-extrabold justify-between">
+            <div className="flex flex-row">
+              <button onClick={() => navigate(-1)} className="mb-2 mr-2">
+                <LeftOutlined />
+              </button>
+              <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+            </div>
+            {post.user_id === userId && (
+              <button>
+                <EllipsisOutlined />
+              </button>
+            )}
           </div>
           <div className="flex flex-row  flex-grow-0 flex-shrink-0 relative gap-2 mb-4 text-sm">
             <p>{post.author}</p> <p className="text-[#808080]">|</p>
