@@ -7,19 +7,16 @@ import DashBoardHeader from '@/components/DashBoard/DashBoardHeader';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
-import { useCookies } from 'react-cookie';
+
 import { supabase } from '@/hooks/supabase';
+import { useAuth } from '@/hooks/useAuth';
 
 const pageSize = 10;
 
 function Home() {
   // 현재 페이지 상태관리
   const [currentPage, setCurrentPage] = useState<number>(1);
-  // 쿠키(액세스토큰) 가져오기
-  const [cookies] = useCookies(['access_token']);
-  const accessToken = cookies.access_token;
-  // console.log(accessToken);
-
+  const { accessToken } = useAuth();
   //naviagte
   const navigate = useNavigate();
   //toast 불러오기
@@ -39,7 +36,7 @@ function Home() {
   };
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['dashboard', currentPage],
     queryFn: () => fetchPosts(currentPage),
     placeholderData: (previousData) => previousData, //이전 데이터 유지
@@ -67,6 +64,9 @@ function Home() {
       navigate('/create-post');
     }
   };
+  const goPostDetail = (postId: number) => {
+    navigate(`/post/${postId}`);
+  };
   return (
     <Layout>
       <div className="my-10">
@@ -79,6 +79,8 @@ function Home() {
             handlePrevious={handlePrevious}
             handleNext={handleNext}
             setCurrentPage={setCurrentPage}
+            goPostDetail={goPostDetail}
+            isLoading={isLoading}
           />
           <Button onClick={handleCreatePost} className="absolute -bottom-2 right-5 w-24">
             글쓰기
