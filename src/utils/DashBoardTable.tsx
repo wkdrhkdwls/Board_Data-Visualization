@@ -24,6 +24,8 @@ export function DashBoardTable({
   handleNext,
   setCurrentPage,
 }: DashBoardTableDTO) {
+  // 밑에 있는 posts를 id를 기준으로 내림차순 정렬
+  const sortedPosts = [...posts].sort((a, b) => b.id - a.id);
   return (
     <>
       <Table className="border-b-[1px] font-bold border-[#e1e1e1] text-center">
@@ -43,7 +45,7 @@ export function DashBoardTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {posts.map((post) => (
+          {sortedPosts.map((post) => (
             <TableRow key={post.id}>
               <TableCell className="font-medium">{post.id}</TableCell>
               <TableCell>{post.title}</TableCell>
