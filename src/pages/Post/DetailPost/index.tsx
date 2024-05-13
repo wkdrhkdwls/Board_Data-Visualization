@@ -2,6 +2,7 @@ import Layout from '@/components/layout/layout';
 import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { PostDTO } from '@/type/PostTable/DashBoard';
+import DeleteModal from '@/utils/Modal';
 import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -13,6 +14,7 @@ const DetailPostPage = () => {
   const navigate = useNavigate();
   const { userId } = useAuth();
   const [showOptions, setShowOptions] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   // 나중에 fetch, delete 전부 /service폴더로 이동
   const fetchPosts = async (postId: number): Promise<PostDTO> => {
@@ -81,6 +83,9 @@ const DetailPostPage = () => {
     await sendComment(nickname, content, dashboardId);
   };
 
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
   return (
     <Layout>
       <>
@@ -100,13 +105,8 @@ const DetailPostPage = () => {
                   </button>
                   {showOptions && (
                     <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
-                      <li
-                        className="p-2 cursor-pointer"
-                        onClick={() => navigate(`/edit/${post.id}`)}
-                      >
-                        수정
-                      </li>
-                      <li className="p-2 cursor-pointer" onClick={deletePost}>
+                      <li className="p-2 cursor-pointer">수정</li>
+                      <li className="p-2 cursor-pointer" onClick={openModal}>
                         삭제
                       </li>
                     </ul>
@@ -138,6 +138,15 @@ const DetailPostPage = () => {
             </div>
           </div>
         )}
+
+        <DeleteModal
+          title="게시글 삭제"
+          content="해당 게시글을 삭제하시겠습니까?"
+          modalOpen={isModalOpen}
+          setModalOpen={setModalOpen}
+          onClose={closeModal}
+          onDelete={deletePost}
+        />
         <div>
           <button onClick={handleCommentSubmit}>버튼</button>
         </div>
