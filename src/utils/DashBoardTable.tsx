@@ -32,9 +32,7 @@ export function DashBoardTable({
   return (
     <>
       {isLoading ? (
-        <>
-          <Skeleton className="w-full" />
-        </>
+        <Skeleton className="w-full" />
       ) : (
         <>
           <Table className="border-b-[1px] font-bold border-[#e1e1e1] text-center">

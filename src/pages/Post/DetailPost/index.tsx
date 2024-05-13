@@ -1,9 +1,11 @@
 import Layout from '@/components/layout/layout';
+import { Input } from '@/components/ui/input';
 import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { PostDTO } from '@/type/PostTable/DashBoard';
 import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const DetailPostPage = () => {
@@ -11,12 +13,20 @@ const DetailPostPage = () => {
   const postId = Number(id);
   const navigate = useNavigate();
   const { userId } = useAuth();
+  const [showOptions, setShowOptions] = useState(false);
 
+  // 나중에 fetch, delete 전부 /service폴더로 이동
   const fetchPosts = async (postId: number): Promise<PostDTO> => {
     const { data, error } = await supabase.from('dashboard').select('*').eq('id', postId).single();
 
     if (error) throw new Error(error.message);
     return data;
+  };
+
+  const deletePost = async () => {
+    const { error } = await supabase.from('dashboard').delete().match({ id: postId });
+    if (error) throw new Error(error.message);
+    else navigate('/');
   };
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
@@ -46,46 +56,93 @@ const DetailPostPage = () => {
     }
   };
 
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
+
+  const sendComment = async (nickname: string, content: string, dashboardId: number) => {
+    const { data, error } = await supabase
+      .from('comment')
+      .insert([{ nickname: nickname, content: content, dashboard_id: dashboardId }]);
+
+    if (error) {
+      console.error('Error sending comment:', error.message);
+      // Optionally handle the error, e.g., show a notification
+    } else {
+      console.log('Comment added successfully:', data);
+      // Optionally clear form, update UI, etc.
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    const nickname = 'UserNickname'; // this should come from user input or auth context
+    const content = 'This is a comment content.'; // this should come from form input
+    const dashboardId = postId; // postId obtained from useParams as shown in your code
+
+    await sendComment(nickname, content, dashboardId);
+  };
+
   return (
     <Layout>
-      {post && (
-        <div className="p-4 max-w-5xl mx-auto text-black my-10">
-          <div className="flex flex-row font-extrabold justify-between">
-            <div className="flex flex-row">
-              <button onClick={() => navigate(-1)} className="mb-2 mr-2">
-                <LeftOutlined />
-              </button>
-              <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+      <>
+        {post && (
+          <div className="p-4 max-w-5xl mx-auto text-black my-10">
+            <div className="flex flex-row font-extrabold justify-between">
+              <div className="flex flex-row">
+                <button onClick={() => navigate(-1)} className="mb-2 mr-2">
+                  <LeftOutlined />
+                </button>
+                <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+              </div>
+              {post.user_id === userId && (
+                <div className="relative inline-block">
+                  <button onClick={toggleOptions}>
+                    <EllipsisOutlined />
+                  </button>
+                  {showOptions && (
+                    <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
+                      <li
+                        className="p-2 cursor-pointer"
+                        onClick={() => navigate(`/edit/${post.id}`)}
+                      >
+                        수정
+                      </li>
+                      <li className="p-2 cursor-pointer" onClick={deletePost}>
+                        삭제
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              )}
             </div>
-            {post.user_id === userId && (
-              <button>
-                <EllipsisOutlined />
-              </button>
-            )}
-          </div>
-          <div className="flex flex-row  flex-grow-0 flex-shrink-0 relative gap-2 mb-4 text-sm">
-            <p>{post.author}</p> <p className="text-[#808080]">|</p>
-            <p>{getTimeDifference(post?.created_at)}</p> <p className="text-[#808080]">|</p>
-            <p>{post.views}</p>
-          </div>
 
-          <p className="mb-4">{post.content}</p>
-          <div className="flex flex-row mb-4">
-            <span className="font-semibold text-[#ee3918] mr-4">첨부된 파일:</span>
-            <p className="font-bold">{post.file_attachment.split('/').pop()}</p>
+            <div className="flex flex-row  flex-grow-0 flex-shrink-0  gap-2 mb-4 text-sm">
+              <p>{post.author}</p> <p className="text-[#808080]">|</p>
+              <p>{getTimeDifference(post?.created_at)}</p> <p className="text-[#808080]">|</p>
+              <p>{post.views}</p>
+            </div>
+
+            <p className="mb-4">{post.content}</p>
+            <div className="flex flex-row mb-4">
+              <span className="font-semibold text-[#ee3918] mr-4">첨부된 파일:</span>
+              <p className="font-bold">{post.file_attachment.split('/').pop()}</p>
+            </div>
+            <div className="mb-4">
+              {post.hashtags?.map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="mb-4">
-            {post.hashtags?.map((tag, index) => (
-              <span
-                key={index}
-                className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
+        )}
+        <div>
+          <button onClick={handleCommentSubmit}>버튼</button>
         </div>
-      )}
+      </>
     </Layout>
   );
 };
