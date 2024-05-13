@@ -1,5 +1,4 @@
 import Layout from '@/components/layout/layout';
-import { Input } from '@/components/ui/input';
 import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { PostDTO } from '@/type/PostTable/DashBoard';
