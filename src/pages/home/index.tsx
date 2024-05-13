@@ -47,6 +47,7 @@ function Home() {
     gcTime: 10 * 60 * 1000, //캐시 테이터 10분
   });
 
+  console.log(data);
   // 전체 페이지 수 계산
   const totalPages = data ? Math.ceil(data.total / pageSize) : 0;
 
