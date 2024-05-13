@@ -7,6 +7,7 @@ import { RecoilRoot } from 'recoil';
 import './index.css';
 
 import router from '@/router';
+import { CookiesProvider } from 'react-cookie';
 
 const queryClient = new QueryClient();
 
@@ -28,8 +29,10 @@ enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
-        {isDevEnvironment && <ReactQueryDevtools />}
-        <RouterProvider router={router} />
+        <CookiesProvider>
+          {isDevEnvironment && <ReactQueryDevtools />}
+          <RouterProvider router={router} />
+        </CookiesProvider>
       </QueryClientProvider>
     </RecoilRoot>,
   );
