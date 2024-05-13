@@ -1,5 +1,5 @@
 export type AuthData = {
   userId: string | null;
-  accessToken: string;
-  nickname: string;
+  accessToken: string | null;
+  nickname: string | null;
 };
