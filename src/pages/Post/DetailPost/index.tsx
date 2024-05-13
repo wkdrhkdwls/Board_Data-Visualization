@@ -43,7 +43,6 @@ const DetailPostPage = () => {
       return `${days}일 전`;
     }
   };
-  console.log(getTimeDifference(post?.created_at));
 
   return (
     <Layout>

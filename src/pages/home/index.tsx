@@ -7,15 +7,15 @@ import DashBoardHeader from '@/components/DashBoard/DashBoardHeader';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
-
 import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
+import usePageStore from '@/store/page';
 
 const pageSize = 10;
 
 function Home() {
   // 현재 페이지 상태관리
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { currentPage, setCurrentPage } = usePageStore();
   const { accessToken } = useAuth();
   //naviagte
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ function Home() {
     const { data, error, count } = await supabase
       .from('dashboard')
       .select('*', { count: 'exact' })
+      .order('id', { ascending: false })
       .range(from, to);
 
     if (error) throw new Error(error.message);
@@ -44,7 +45,6 @@ function Home() {
     gcTime: 10 * 60 * 1000, //캐시 테이터 10분
   });
 
-  console.log(data);
   // 전체 페이지 수 계산
   const totalPages = data ? Math.ceil(data.total / pageSize) : 0;
 
