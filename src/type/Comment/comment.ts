@@ -17,3 +17,9 @@ type ReplyType = {
   created_at: string;
   comment_id: number;
 };
+
+export type CommentReplySectionDTO = {
+  commentId: number;
+  replies: any[];
+  onSubmitReply: (commentId: number, content: string) => Promise<void>;
+};

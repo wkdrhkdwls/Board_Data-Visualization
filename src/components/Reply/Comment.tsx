@@ -6,12 +6,12 @@ import { fetchCommentReplies, sendCommentReply } from '@/services/commentReplyAP
 import { CommentSectionDTO, CommentType } from '@/type/Comment/comment';
 import { formatDate } from '@/utils/changeDateTime';
 import { useEffect, useState } from 'react';
+import CommentReplySection from '@/components/Reply/Comment_Reply';
 
 const CommentSection = ({ postId }: CommentSectionDTO) => {
   const { nickname } = useAuth();
   const [content, setContent] = useState('');
   const [comments, setComments] = useState([] as any[]);
-  const [replyContent, setReplyContent] = useState('');
   const [replyVisibility, setReplyVisibility] = useState<Record<number, boolean>>({});
 
   const loadComments = async () => {
@@ -25,6 +25,7 @@ const CommentSection = ({ postId }: CommentSectionDTO) => {
       console.error('Error fetching comments:', error.message);
     }
   };
+
   const handleCommentSubmit = async () => {
     try {
       await sendComment(nickname, content, postId);
@@ -37,11 +38,10 @@ const CommentSection = ({ postId }: CommentSectionDTO) => {
     }
   };
 
-  const handleReplySubmit = async (commentId: number) => {
+  const handleReplySubmit = async (commentId: number, content: string) => {
     try {
-      await sendCommentReply(nickname, replyContent, commentId);
-      console.log('Reply added successfully');
-      setReplyContent('');
+      await sendCommentReply(nickname, content, commentId);
+
       loadComments();
     } catch (error: any) {
       console.error('Error sending reply:', error.message);
@@ -55,11 +55,12 @@ const CommentSection = ({ postId }: CommentSectionDTO) => {
   useEffect(() => {
     loadComments();
   }, [postId]);
+
   return (
     <div>
       <div className="flex flex-row justify-between">
         <Input value={content} onChange={(e) => setContent(e.target.value)} />
-        <Button onClick={handleCommentSubmit}>버튼</Button>
+        <Button onClick={handleCommentSubmit}>댓글작성</Button>
       </div>
       <div>
         {comments.map((comment) => (
@@ -68,29 +69,20 @@ const CommentSection = ({ postId }: CommentSectionDTO) => {
             className="my-4 py-4 flex flex-col border-t-[1px] border-b-[1px] border-[#E1E1E1]"
           >
             <p className="font-bold">{comment.nickname}</p>
+
             <p>{comment.content}</p>
             <div className="flex flex-row">
               <p className="text-sm text-gray-500">{formatDate(comment.created_at)}</p>
-              <p className="cursor-pointer" onClick={() => toggleReplyInput(comment.id)}>
+              <button className="cursor-pointer" onClick={() => toggleReplyInput(comment.id)}>
                 답글
-              </p>
+              </button>
             </div>
             {replyVisibility[comment.id] && (
-              <>
-                <div className="mt-2 ml-4">
-                  <Input value={replyContent} onChange={(e) => setReplyContent(e.target.value)} />
-                  <Button onClick={() => handleReplySubmit(comment.id)}>댓글 보내기</Button>
-                </div>
-                <div className="ml-4 mt-2">
-                  {comment.replies?.map((reply: any) => (
-                    <div key={reply.id} className="mb-2">
-                      <p className="font-bold">{reply.nickname}</p>
-                      <p>{reply.content}</p>
-                      <p className="text-sm text-gray-500">{formatDate(reply.created_at)}</p>
-                    </div>
-                  ))}
-                </div>
-              </>
+              <CommentReplySection
+                commentId={comment.id}
+                replies={comment.replies || []}
+                onSubmitReply={handleReplySubmit}
+              />
             )}
           </div>
         ))}
