@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/use-toast';
-import { createPost } from '@/services/dashBoardAPI';
+import { createPost } from '@/services/DashBoard/dashBoardAPI';
 
 const CreatePostPage = () => {
   const { register, handleSubmit, setValue } = useForm();

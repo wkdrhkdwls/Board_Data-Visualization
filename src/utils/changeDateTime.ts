@@ -1,6 +1,6 @@
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  const offset = 9 * 60; // Offset for South Korea (KST)
+  const offset = 9 * 60; // KST (UTC+9) offset in minutes
   const kstDate = new Date(date.getTime() + offset * 60 * 1000);
   const year = kstDate.getFullYear();
   const month = String(kstDate.getMonth() + 1).padStart(2, '0');

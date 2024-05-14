@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/page';
-import { fetchPosts } from '@/services/dashBoardAPI';
+import { fetchPosts } from '@/services/DashBoard/dashBoardAPI';
 
 const pageSize = 10;
 

@@ -1,7 +1,7 @@
 import CommentSection from '@/components/Reply/Comment';
 import Layout from '@/components/layout/layout';
 import { useAuth } from '@/hooks/useAuth';
-import { deletePost, fetchPostById } from '@/services/dashBoardAPI';
+import { deletePost, fetchPostById } from '@/services/DashBoard/dashBoardAPI';
 import DeleteModal from '@/utils/Modal';
 import { getTimeDifference } from '@/utils/changeDateTime';
 import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
@@ -19,6 +19,7 @@ const DetailPostPage = () => {
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   // main.tsx에서 loading을 하므로 굳이 여기서 할 필요는 없다.
+  // post를 전역으로 관리해서 댓글로 넘기자.
   const { data: post } = useQuery({
     queryKey: ['dashboard', postId],
     queryFn: () => fetchPostById(postId),

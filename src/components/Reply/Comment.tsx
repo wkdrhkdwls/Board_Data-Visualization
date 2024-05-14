@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
-import { fetchComments, sendComment } from '@/services/commentAPI';
-import { fetchCommentReplies, sendCommentReply } from '@/services/commentReplyAPI';
+import { fetchComments, sendComment } from '@/services/Comment/commentAPI';
+import { fetchCommentReplies, sendCommentReply } from '@/services/Comment/commentReplyAPI';
 import { CommentSectionDTO, CommentType } from '@/type/Comment/comment';
 import { formatDate } from '@/utils/changeDateTime';
 import { useEffect, useState } from 'react';

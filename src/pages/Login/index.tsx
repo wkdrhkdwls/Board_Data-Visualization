@@ -8,7 +8,7 @@ import { EyeFilled, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { LoginFormDTO } from '@/type/Login/Login';
 import { useToast } from '@/components/ui/use-toast';
-import { signInWithPassword } from '@/services/loginAPI';
+import { signInWithPassword } from '@/services/Login/loginAPI';
 
 const LoginPage = () => {
   const navigate = useNavigate();
