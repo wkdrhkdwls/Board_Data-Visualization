@@ -1,10 +1,9 @@
+import CommentSection from '@/components/Reply/Comment';
 import Layout from '@/components/layout/layout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { deletePost, fetchPostById } from '@/services/dashBoardAPI';
 import DeleteModal from '@/utils/Modal';
+import { getTimeDifference } from '@/utils/changeDateTime';
 import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -28,39 +27,8 @@ const DetailPostPage = () => {
     gcTime: 10 * 60 * 1000, //캐시 테이터 10분
   });
 
-  const getTimeDifference = (createdAt: any) => {
-    const postDate = new Date(createdAt).getTime();
-    const now = new Date().getTime();
-    const differenceInMilliseconds = now - postDate;
-    const minutes = Math.floor(differenceInMilliseconds / 60000);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (minutes < 60) {
-      return `${minutes}분 전`;
-    } else if (hours < 24) {
-      return `${hours}시간 전`;
-    } else {
-      return `${days}일 전`;
-    }
-  };
-
   const toggleOptions = () => {
     setShowOptions(!showOptions);
-  };
-
-  const sendComment = async (nickname: string, content: string, dashboardId: number) => {
-    const { data, error } = await supabase
-      .from('comment')
-      .insert([{ nickname: nickname, content: content, dashboard_id: dashboardId }]);
-
-    if (error) {
-      console.error('Error sending comment:', error.message);
-      // Optionally handle the error, e.g., show a notification
-    } else {
-      console.log('Comment added successfully:', data);
-      // Optionally clear form, update UI, etc.
-    }
   };
 
   const handleDeletePost = async () => {
@@ -75,14 +43,6 @@ const DetailPostPage = () => {
         console.error('Unexpected error:', error);
       }
     }
-  };
-
-  const handleCommentSubmit = async () => {
-    const nickname = 'UserNickname'; // this should come from user input or auth context
-    const content = 'This is a comment content.'; // this should come from form input
-    const dashboardId = postId; // postId obtained from useParams as shown in your code
-
-    await sendComment(nickname, content, dashboardId);
   };
 
   const openModal = () => setModalOpen(true);
@@ -138,10 +98,7 @@ const DetailPostPage = () => {
                 </span>
               ))}
             </div>
-            <div className="flex flex-row justify-between">
-              <Input />
-              <Button onClick={handleCommentSubmit}>버튼</Button>
-            </div>
+            <CommentSection postId={postId} />
           </div>
         )}
 

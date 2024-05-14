@@ -1,12 +1,10 @@
 import Layout from '@/components/layout/layout';
 import { DashBoardTable } from '@/utils/DashBoardTable';
 import { useQuery } from '@tanstack/react-query';
-import { FetchDataDTo } from '@/type/PostTable/DashBoard';
 import DashBoardHeader from '@/components/DashBoard/DashBoardHeader';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/page';
 import { fetchPosts } from '@/services/dashBoardAPI';
