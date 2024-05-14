@@ -26,7 +26,7 @@ const CommentSection = () => {
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
   const [replyVisibility, setReplyVisibility] = useState<Record<number, boolean>>({});
-  const { postId, post } = usePostStore();
+  const { postId } = usePostStore();
   const { toast } = useToast();
 
   const closeModal = () => setModalOpen(false);
@@ -56,7 +56,7 @@ const CommentSection = () => {
 
     // If authenticated, proceed with the comment submission
     try {
-      await sendComment(nickname, content, postId!);
+      await sendComment(nickname, content, postId!, userId!);
       console.log('Comment added successfully');
 
       setContent('');
@@ -105,7 +105,7 @@ const CommentSection = () => {
   useEffect(() => {
     loadComments();
   }, [postId]);
-
+  console.log(comments);
   return (
     <div>
       <div className="flex flex-row justify-between">
@@ -119,7 +119,7 @@ const CommentSection = () => {
             className="my-4 py-4 flex flex-col border-t-[1px] border-b-[1px] border-[#E1E1E1]"
           >
             <p className="font-bold">{comment.nickname}</p>
-            {post.user_id === userId && (
+            {comment.user_id === userId && (
               <div className="relative inline-block">
                 <button onClick={() => toggleOptions(comment.id)}>
                   <EllipsisOutlined />

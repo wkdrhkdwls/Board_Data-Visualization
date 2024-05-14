@@ -4,6 +4,7 @@ export type CommentType = {
   content: string;
   created_at: string;
   replies?: ReplyType[];
+  user_id: string;
 };
 
 type ReplyType = {
