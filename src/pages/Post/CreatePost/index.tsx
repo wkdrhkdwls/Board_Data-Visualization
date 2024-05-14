@@ -10,14 +10,19 @@ import { useToast } from '@/components/ui/use-toast';
 import { createPost } from '@/services/DashBoard/dashBoardAPI';
 
 const CreatePostPage = () => {
+  // useForm 훅을 사용하여 폼 상태를 관리
   const { register, handleSubmit, setValue } = useForm();
+  // useAuth 훅을 사용하여 사용자 정보를 가져옴
   const { nickname, userId } = useAuth();
+  // 파일 이름을 표시하기 위한 상태
   const [fileLabel, setFileLabel] = useState('');
 
   const { toast } = useToast();
   const navigate = useNavigate();
+  // 더미데이터로 랜덤 조회수 생성
   const randomViews = Math.floor(Math.random() * 100) + 1;
 
+  // 파일 선택 시 파일 이름을 표시
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (file) {
@@ -26,6 +31,7 @@ const CreatePostPage = () => {
     }
   };
 
+  // 게시글 작성 요청
   const handleCreatePost = async (formData: any) => {
     // 실제로 Input에 입력된 데이터
     const { title, content, fileAttachment, hashtags } = formData;

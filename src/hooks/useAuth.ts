@@ -4,7 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useAuth = () => {
   const [cookies] = useCookies(['access_token']);
+
+  // 쿠키에서 access_token 가져오기
   const accessToken = cookies.access_token;
+  // 로컬 스토리지에서 userId 가져오기
   const userId = localStorage.getItem('userId');
 
   // 프로필 정보를 가져오는 쿼리
@@ -25,6 +28,7 @@ export const useAuth = () => {
     return data;
   };
 
+  // React Query를 사용하여 데이터 가져오기 및 데이터 캐싱
   const { data, error, isLoading } = useQuery({
     queryKey: ['profile', userId],
     queryFn: () => fetchProfile(userId),

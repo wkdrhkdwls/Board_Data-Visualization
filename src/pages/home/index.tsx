@@ -48,6 +48,8 @@ function Home() {
       navigate('/create-post');
     }
   };
+
+  // 글 상세 페이지 이동
   const goPostDetail = (postId: number) => {
     navigate(`/post/${postId}`);
   };

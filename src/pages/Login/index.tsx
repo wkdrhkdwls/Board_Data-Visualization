@@ -12,13 +12,20 @@ import { signInWithPassword } from '@/services/Login/loginAPI';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+
+  // useForm 훅을 사용하여 폼 상태를 관리
   const { register, handleSubmit } = useForm<LoginFormDTO>();
+  // access_token 쿠키를 저장하기 위해 useCookies 훅 사용
   const [, setCookies] = useCookies(['access_token']);
+  // 비밀번호 보이기 여부를 관리하기 위한 상태
   const [showPassword, setShowPassword] = useState(false);
+  // useToast 훅을 사용하여 토스트 메시지를 띄움
   const { toast } = useToast();
 
+  // 로그인 폼 제출 핸들러
   const loginHandler: SubmitHandler<LoginFormDTO> = async (formData) => {
     try {
+      // 로그인 API 호출
       const data = await signInWithPassword(formData.email, formData.password);
 
       console.log('Login successful', data);
@@ -48,9 +55,12 @@ const LoginPage = () => {
     }
   };
 
+  // 회원가입 페이지로 이동
   const handleSignUp = () => {
     navigate('/signup');
   };
+
+  // 비밀번호 보이기/숨기기 토글
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
