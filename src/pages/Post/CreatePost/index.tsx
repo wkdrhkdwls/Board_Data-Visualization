@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import Layout from '@/components/layout/layout';
 import { useForm } from 'react-hook-form';
-
-import { supabase } from '@/hooks/supabase';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/use-toast';
+import { createPost } from '@/services/dashBoardAPI';
 
 const CreatePostPage = () => {
   const { register, handleSubmit, setValue } = useForm();
@@ -36,35 +35,33 @@ const CreatePostPage = () => {
       title,
       content,
       file_attachment: fileAttachment,
-      author: nickname,
+      author: nickname || '',
       hashtags: hashtags.split(',').map((tag: any) => tag.trim()),
       views: randomViews,
-      user_id: userId,
+      user_id: userId || '',
     };
 
     // 게시글 작성 요청
-    const { data, error } = await supabase.from('dashboard').insert([postData]);
-
-    // 게시글 작성 결과에 따른 처리(실패, 성공)
-    if (error) {
+    try {
+      const data = await createPost(postData);
+      console.log('Post created successfully:', data);
+      setTimeout(() => {
+        toast({
+          title: '게시물 등록 성공',
+          duration: 500,
+          className: 'flex item-center justify-center',
+        });
+        navigate('/');
+      }, 500);
+    } catch (error: any) {
       console.error('Error inserting post:', error.message);
       toast({
         variant: 'destructive',
         title: '게시물 등록에 실패했습니다.',
         description: error.message,
-        duration: 2000,
+        duration: 500,
         className: 'flex item-center justify-center',
       });
-    } else {
-      console.log('Post created successfully:', data);
-      setTimeout(() => {
-        toast({
-          title: '게시물 등록 성공',
-          duration: 2000,
-          className: 'flex item-center justify-center',
-        });
-        navigate('/');
-      }, 2000); // supabase에 등록되는 시간이 걸려 2초 뒤에 메인 페이지로 이동
     }
   };
 

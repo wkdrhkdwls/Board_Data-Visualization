@@ -1,7 +1,9 @@
 import Layout from '@/components/layout/layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { PostDTO } from '@/type/PostTable/DashBoard';
+import { deletePost, fetchPostById } from '@/services/dashBoardAPI';
 import DeleteModal from '@/utils/Modal';
 import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -16,25 +18,11 @@ const DetailPostPage = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  // 나중에 fetch, delete 전부 /service폴더로 이동
-  const fetchPosts = async (postId: number): Promise<PostDTO> => {
-    const { data, error } = await supabase.from('dashboard').select('*').eq('id', postId).single();
-
-    if (error) throw new Error(error.message);
-    return data;
-  };
-
-  const deletePost = async () => {
-    const { error } = await supabase.from('dashboard').delete().match({ id: postId });
-    if (error) throw new Error(error.message);
-    else navigate('/');
-  };
-
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   // main.tsx에서 loading을 하므로 굳이 여기서 할 필요는 없다.
   const { data: post } = useQuery({
     queryKey: ['dashboard', postId],
-    queryFn: () => fetchPosts(postId),
+    queryFn: () => fetchPostById(postId),
     placeholderData: (previousData) => previousData, //이전 데이터 유지
     staleTime: 1000 * 60 * 5, // refresh 5분
     gcTime: 10 * 60 * 1000, //캐시 테이터 10분
@@ -72,6 +60,20 @@ const DetailPostPage = () => {
     } else {
       console.log('Comment added successfully:', data);
       // Optionally clear form, update UI, etc.
+    }
+  };
+
+  const handleDeletePost = async () => {
+    const isError = (error: unknown): error is Error => error instanceof Error;
+    try {
+      await deletePost(postId);
+      navigate('/');
+    } catch (error) {
+      if (isError(error)) {
+        console.error('Error deleting post:', error.message);
+      } else {
+        console.error('Unexpected error:', error);
+      }
     }
   };
 
@@ -136,6 +138,10 @@ const DetailPostPage = () => {
                 </span>
               ))}
             </div>
+            <div className="flex flex-row justify-between">
+              <Input />
+              <Button onClick={handleCommentSubmit}>버튼</Button>
+            </div>
           </div>
         )}
 
@@ -145,11 +151,8 @@ const DetailPostPage = () => {
           modalOpen={isModalOpen}
           setModalOpen={setModalOpen}
           onClose={closeModal}
-          onDelete={deletePost}
+          onDelete={handleDeletePost}
         />
-        <div>
-          <button onClick={handleCommentSubmit}>버튼</button>
-        </div>
       </>
     </Layout>
   );

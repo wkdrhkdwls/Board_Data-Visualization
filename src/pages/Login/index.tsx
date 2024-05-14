@@ -8,7 +8,7 @@ import { EyeFilled, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { LoginFormDTO } from '@/type/Login/Login';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/hooks/supabase';
+import { signInWithPassword } from '@/services/loginAPI';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,38 +19,32 @@ const LoginPage = () => {
 
   const loginHandler: SubmitHandler<LoginFormDTO> = async (formData) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
+      const data = await signInWithPassword(formData.email, formData.password);
+
+      console.log('Login successful', data);
+      localStorage.setItem('refresh_token', data.session.refresh_token);
+      localStorage.setItem('userId', data.user.id);
+      setCookies('access_token', data.session.access_token, {
+        path: '/',
+        maxAge: data.session.expires_in,
       });
 
-      if (error) {
-        console.error('로그인 에러 : ', error.message);
-        toast({
-          variant: 'destructive',
-          title: '로그인 실패',
-          description: error.message,
-          duration: 2000,
-          className: 'flex item-center justify-center',
-        });
-      } else if (data) {
-        console.log('Login successful', data);
-        localStorage.setItem('refresh_token', data.session.refresh_token);
-        localStorage.setItem('userId', data.user.id);
-        setCookies('access_token', data.session.access_token, {
-          path: '/',
-          maxAge: data.session.expires_in,
-        });
-        toast({
-          title: '로그인 성공',
-          description: '로그인 성공했습니다.',
-          duration: 2000,
-          className: 'flex item-center justify-center',
-        });
-        navigate('/');
-      }
-    } catch (error) {
-      console.error('Unexpected error:', error);
+      toast({
+        title: '로그인 성공',
+        description: '로그인 성공했습니다.',
+        duration: 2000,
+        className: 'flex item-center justify-center',
+      });
+      navigate('/');
+    } catch (error: any) {
+      console.error('로그인 에러 : ', error.message);
+      toast({
+        variant: 'destructive',
+        title: '로그인 실패',
+        description: error.message,
+        duration: 2000,
+        className: 'flex item-center justify-center',
+      });
     }
   };
 
