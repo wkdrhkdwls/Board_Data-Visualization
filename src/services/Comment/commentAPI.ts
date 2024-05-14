@@ -24,3 +24,8 @@ export const fetchComments = async (dashboardId: number) => {
   }
   return data;
 };
+
+export const deleteCommentById = async (commentId: number): Promise<void> => {
+  const { error } = await supabase.from('comment').delete().match({ id: commentId });
+  if (error) throw new Error(error.message);
+};

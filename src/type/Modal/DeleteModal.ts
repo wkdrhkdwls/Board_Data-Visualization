@@ -5,4 +5,5 @@ export type DeleteModalDTO = {
   setModalOpen: (value: boolean) => void;
   onClose: () => void;
   onDelete: () => void;
+  commentId?: number;
 };

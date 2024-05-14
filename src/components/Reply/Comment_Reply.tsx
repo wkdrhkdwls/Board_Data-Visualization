@@ -3,11 +3,26 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatDate } from '@/utils/changeDateTime';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '../ui/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const CommentReplySection = ({ commentId, replies, onSubmitReply }: CommentReplySectionDTO) => {
+  const { accessToken } = useAuth();
+  const navigate = useNavigate();
   const [replyContent, setReplyContent] = useState('');
+  const { toast } = useToast();
 
   const handleReplySubmit = async () => {
+    if (!accessToken) {
+      toast({
+        title: '로그인이 필요합니다.',
+        duration: 3000,
+      });
+      navigate('/login');
+      return;
+    }
+
     try {
       await onSubmitReply(commentId, replyContent);
       setReplyContent('');

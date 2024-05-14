@@ -1,15 +1,17 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-
 import './index.css';
-
 import router from '@/router';
 import { CookiesProvider } from 'react-cookie';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error) => console.error(`Something went wrong: ${error.message}`),
+  }),
+});
 
 const isDevEnvironment = import.meta.env.DEV;
 

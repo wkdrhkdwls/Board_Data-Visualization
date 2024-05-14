@@ -1,7 +1,3 @@
-export type CommentSectionDTO = {
-  postId: number;
-};
-
 export type CommentType = {
   id: number;
   nickname: string;

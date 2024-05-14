@@ -22,3 +22,8 @@ export const sendCommentReply = async (nickname: string, content: string, commen
   }
   return data;
 };
+
+export const deleteCommentReplies = async (commentId: number): Promise<void> => {
+  const { error } = await supabase.from('comment_reply').delete().match({ comment_id: commentId });
+  if (error) throw new Error(error.message);
+};
