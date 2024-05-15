@@ -1,85 +1,69 @@
+import CommentSection from '@/components/Reply/Comment';
 import Layout from '@/components/layout/layout';
-import { supabase } from '@/hooks/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { PostDTO } from '@/type/PostTable/DashBoard';
+import { deletePost, fetchPostById } from '@/services/DashBoard/dashBoardAPI';
+import usePostStore from '@/store/postStore';
+import DeleteModal from '@/utils/Modal';
+import { getTimeDifference } from '@/utils/changeDateTime';
 import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const DetailPostPage = () => {
   const { id } = useParams();
-  const postId = Number(id);
   const navigate = useNavigate();
   const { userId } = useAuth();
+  // 게시물 수정, 삭제 옵션
   const [showOptions, setShowOptions] = useState(false);
 
-  // 나중에 fetch, delete 전부 /service폴더로 이동
-  const fetchPosts = async (postId: number): Promise<PostDTO> => {
-    const { data, error } = await supabase.from('dashboard').select('*').eq('id', postId).single();
-
-    if (error) throw new Error(error.message);
-    return data;
-  };
-
-  const deletePost = async () => {
-    const { error } = await supabase.from('dashboard').delete().match({ id: postId });
-    if (error) throw new Error(error.message);
-    else navigate('/');
-  };
+  // 모달 옵션
+  const [isModalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+  // zustand로 data와 postId 전역관리
+  const { post, setPost, postId, setPostId } = usePostStore();
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   // main.tsx에서 loading을 하므로 굳이 여기서 할 필요는 없다.
-  const { data: post } = useQuery({
+  const { data } = useQuery({
     queryKey: ['dashboard', postId],
-    queryFn: () => fetchPosts(postId),
+    queryFn: () => fetchPostById(postId!),
     placeholderData: (previousData) => previousData, //이전 데이터 유지
     staleTime: 1000 * 60 * 5, // refresh 5분
     gcTime: 10 * 60 * 1000, //캐시 테이터 10분
+    enabled: !!postId,
   });
 
-  const getTimeDifference = (createdAt: any) => {
-    const postDate = new Date(createdAt).getTime();
-    const now = new Date().getTime();
-    const differenceInMilliseconds = now - postDate;
-    const minutes = Math.floor(differenceInMilliseconds / 60000);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (minutes < 60) {
-      return `${minutes}분 전`;
-    } else if (hours < 24) {
-      return `${hours}시간 전`;
-    } else {
-      return `${days}일 전`;
-    }
-  };
-
+  // 게시물 수정, 삭제 옵션 여닫기
   const toggleOptions = () => {
     setShowOptions(!showOptions);
   };
 
-  const sendComment = async (nickname: string, content: string, dashboardId: number) => {
-    const { data, error } = await supabase
-      .from('comment')
-      .insert([{ nickname: nickname, content: content, dashboard_id: dashboardId }]);
-
-    if (error) {
-      console.error('Error sending comment:', error.message);
-      // Optionally handle the error, e.g., show a notification
-    } else {
-      console.log('Comment added successfully:', data);
-      // Optionally clear form, update UI, etc.
+  // 게시물 삭제
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(postId!);
+      navigate('/');
+    } catch (error: any) {
+      console.error('Error deleting post:', error.message);
     }
   };
 
-  const handleCommentSubmit = async () => {
-    const nickname = 'UserNickname'; // this should come from user input or auth context
-    const content = 'This is a comment content.'; // this should come from form input
-    const dashboardId = postId; // postId obtained from useParams as shown in your code
+  // postId가 변경되면 postId를 업데이트
+  useEffect(() => {
+    if (id) {
+      const postId = Number(id);
+      setPostId(postId);
+    }
+  }, [id, setPostId]);
 
-    await sendComment(nickname, content, dashboardId);
-  };
+  // data가 변경되면 post를 업데이트
+  useEffect(() => {
+    if (data) {
+      setPost(data);
+    }
+  }, [data, setPost]);
 
   return (
     <Layout>
@@ -100,13 +84,8 @@ const DetailPostPage = () => {
                   </button>
                   {showOptions && (
                     <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
-                      <li
-                        className="p-2 cursor-pointer"
-                        onClick={() => navigate(`/edit/${post.id}`)}
-                      >
-                        수정
-                      </li>
-                      <li className="p-2 cursor-pointer" onClick={deletePost}>
+                      <li className="p-2 cursor-pointer">수정</li>
+                      <li className="p-2 cursor-pointer" onClick={openModal}>
                         삭제
                       </li>
                     </ul>
@@ -127,7 +106,7 @@ const DetailPostPage = () => {
               <p className="font-bold">{post.file_attachment.split('/').pop()}</p>
             </div>
             <div className="mb-4">
-              {post.hashtags?.map((tag, index) => (
+              {post.hashtags?.map((tag: string, index: number) => (
                 <span
                   key={index}
                   className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
@@ -136,11 +115,18 @@ const DetailPostPage = () => {
                 </span>
               ))}
             </div>
+            <CommentSection />
           </div>
         )}
-        <div>
-          <button onClick={handleCommentSubmit}>버튼</button>
-        </div>
+
+        <DeleteModal
+          title="게시글 삭제"
+          content="해당 게시글을 삭제하시겠습니까?"
+          modalOpen={isModalOpen}
+          setModalOpen={setModalOpen}
+          onClose={closeModal}
+          onDelete={handleDeletePost}
+        />
       </>
     </Layout>
   );

@@ -6,7 +6,10 @@ import { useAuth } from '@/hooks/useAuth';
 
 const Header = () => {
   const navigate = useNavigate();
+
+  // useAuth 훅을 사용하여 닉네임 가져오기
   const { nickname } = useAuth();
+  // 모바일 메뉴 열기 여부 상태
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // 홈으로 이동
@@ -27,8 +30,6 @@ const Header = () => {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
-
-  // profiles 테이블에서 닉네임 가져오기
 
   return (
     <div className="w-full h-auto py-5 bg-white border-b border-gray-200">

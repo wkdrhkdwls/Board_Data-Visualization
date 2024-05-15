@@ -1,24 +1,28 @@
 import { useState } from 'react';
 import Layout from '@/components/layout/layout';
 import { useForm } from 'react-hook-form';
-
-import { supabase } from '@/hooks/supabase';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/use-toast';
+import { createPost } from '@/services/DashBoard/dashBoardAPI';
 
 const CreatePostPage = () => {
+  // useForm 훅을 사용하여 폼 상태를 관리
   const { register, handleSubmit, setValue } = useForm();
+  // useAuth 훅을 사용하여 사용자 정보를 가져옴
   const { nickname, userId } = useAuth();
+  // 파일 이름을 표시하기 위한 상태
   const [fileLabel, setFileLabel] = useState('');
 
   const { toast } = useToast();
   const navigate = useNavigate();
+  // 더미데이터로 랜덤 조회수 생성
   const randomViews = Math.floor(Math.random() * 100) + 1;
 
+  // 파일 선택 시 파일 이름을 표시
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (file) {
@@ -27,6 +31,7 @@ const CreatePostPage = () => {
     }
   };
 
+  // 게시글 작성 요청
   const handleCreatePost = async (formData: any) => {
     // 실제로 Input에 입력된 데이터
     const { title, content, fileAttachment, hashtags } = formData;
@@ -36,35 +41,33 @@ const CreatePostPage = () => {
       title,
       content,
       file_attachment: fileAttachment,
-      author: nickname,
+      author: nickname || '',
       hashtags: hashtags.split(',').map((tag: any) => tag.trim()),
       views: randomViews,
-      user_id: userId,
+      user_id: userId || '',
     };
 
     // 게시글 작성 요청
-    const { data, error } = await supabase.from('dashboard').insert([postData]);
-
-    // 게시글 작성 결과에 따른 처리(실패, 성공)
-    if (error) {
+    try {
+      const data = await createPost(postData);
+      console.log('Post created successfully:', data);
+      setTimeout(() => {
+        toast({
+          title: '게시물 등록 성공',
+          duration: 500,
+          className: 'flex item-center justify-center',
+        });
+        navigate('/');
+      }, 500);
+    } catch (error: any) {
       console.error('Error inserting post:', error.message);
       toast({
         variant: 'destructive',
         title: '게시물 등록에 실패했습니다.',
         description: error.message,
-        duration: 2000,
+        duration: 500,
         className: 'flex item-center justify-center',
       });
-    } else {
-      console.log('Post created successfully:', data);
-      setTimeout(() => {
-        toast({
-          title: '게시물 등록 성공',
-          duration: 2000,
-          className: 'flex item-center justify-center',
-        });
-        navigate('/');
-      }, 2000); // supabase에 등록되는 시간이 걸려 2초 뒤에 메인 페이지로 이동
     }
   };
 

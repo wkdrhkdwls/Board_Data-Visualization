@@ -1,4 +1,4 @@
-import { PageDTO } from '@/type/Store/page';
+import { PageDTO } from '@/type/Store/pageStore';
 import { create } from 'zustand';
 
 const usePageStore = create<PageDTO>((set) => ({
