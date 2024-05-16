@@ -19,12 +19,14 @@ export const useCommentActions = (postId: number) => {
     useCommentStore();
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
-
+  const [selectedReplyId, setSelectedReplyId] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
   const [replyVisibility, setReplyVisibility] = useState<Record<number, boolean>>({});
 
-  const closeModal = () => setModalOpen(false);
-
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedReplyId(null);
+  };
   const loadComments = async () => {
     try {
       const data: CommentType[] = await fetchComments(postId);
@@ -115,6 +117,8 @@ export const useCommentActions = (postId: number) => {
     closeModal,
     setModalOpen,
     setSelectedCommentId,
+    setSelectedReplyId,
+    selectedReplyId,
     showOptions,
     replyVisibility,
     loadComments,

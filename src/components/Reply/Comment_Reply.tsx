@@ -14,10 +14,16 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
   const { comments } = useCommentStore();
 
   const [replyContent, setReplyContent] = useState('');
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedReplyId, setSelectedReplyId] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
-  const { handleReplySubmit, handleDeleteReply, closeModal } = useCommentActions(commentId);
+  const {
+    handleReplySubmit,
+    handleDeleteReply,
+    closeModal,
+    setModalOpen,
+    isModalOpen,
+    selectedReplyId,
+    setSelectedReplyId,
+  } = useCommentActions(commentId);
 
   const comment = comments.find((c) => c.id === commentId);
   const openDeleteModal = (replyId: number) => {
