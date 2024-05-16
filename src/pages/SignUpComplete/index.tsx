@@ -19,7 +19,7 @@ const SignUpCompletePage = () => {
           회원가입이 완료되었습니다.
         </p>
         <p className="flex-grow-0 flex-shrink-0 text-xl text-left text-[#808080]">축하드려요!</p>
-        <Button className="text-lg w-[240px] mt-5" onClick={handleLogin}>
+        <Button className="text-lg w-[240px] mt-5 mobile:w-[120px]" onClick={handleLogin}>
           로그인
         </Button>
       </div>

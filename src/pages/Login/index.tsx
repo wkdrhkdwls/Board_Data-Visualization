@@ -69,7 +69,10 @@ const LoginPage = () => {
     <Layout>
       <div className="flex flex-col items-center justify-center p-4 my-28">
         <h2 className="text-center text-[32px] font-extrabold my-4">로그인</h2>
-        <form onSubmit={handleSubmit(loginHandler)} className="w-full max-w-md px-8 pt-6 pb-8 mb-4">
+        <form
+          onSubmit={handleSubmit(loginHandler)}
+          className="w-full mobile:max-w-full max-w-md px-8 pt-6 pb-8 mb-4"
+        >
           <div className="mb-4">
             <Input
               type="email"
@@ -95,7 +98,7 @@ const LoginPage = () => {
               로그인
             </Button>
           </div>
-          <div className="flex flex-row items-center justify-center flex-grow-0 flex-shrink-0 relative gap-4 mb-4 text-sm font-medium text-[#808080]">
+          <div className="flex flex-row items-center justify-center flex-grow-0 flex-shrink-0 relative gap-4 mb-4 text-sm mobile:text-[10px] font-medium text-[#808080]">
             <p>아이디 찾기 </p>
             <p>|</p>
             <p>비밀번호 찾기</p>

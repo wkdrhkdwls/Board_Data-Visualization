@@ -36,11 +36,13 @@ const Header = () => {
       <div className="flex justify-between items-center h-auto px-4">
         <div className="flex items-center">
           {/* 모바일에서만 보이는 메뉴 버튼과 Testsite 버튼 */}
-          <div className="mobile:block hidden">
+          <div className="mobile:flex mobile:flex-row hidden">
             <button onClick={toggleMobileMenu} className="text-xl font-bold mr-4">
               ☰
             </button>
-            <p className="bg-white text-2xl font-bold text-[#ee3918] z-10">Testsite</p>
+            <p className="bg-white text-2xl font-bold text-[#ee3918] z-10 mobile:text-center">
+              Testsite
+            </p>
           </div>
         </div>
 
@@ -87,7 +89,7 @@ const Header = () => {
                   로그인
                 </Button>
               )}
-              <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">
+              <Button onClick={handleHome} className=" bg-white text-black text-lg my-4">
                 게시판
               </Button>
               <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">

@@ -81,57 +81,60 @@ const CreatePostPage = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center px-8 py-28">
+      <div className="flex flex-col items-center justify-center px-8 py-28 mobile:py-10 mx-10 mobile:mx-0 mobile:px-0">
         <h2 className="text-center text-[32px] font-bold">게시글 작성</h2>
-        <form onSubmit={handleSubmit(handleCreatePost)} className="w-full max-w-4xl p-8 mb-4">
-          <div className="flex flex-row mb-4">
-            <label className="w-10 mr-48" htmlFor="title">
+        <form
+          onSubmit={handleSubmit(handleCreatePost)}
+          className="w-full desktop:max-w-4xl mobile: p-8 mb-4 mobile:text-xs"
+        >
+          <div className="mb-4 flex flex-row items-center ">
+            <label className="w-20 text-right mr-12 font-extrabold" htmlFor="title">
               제목
             </label>
             <Input
               {...register('title', { required: true })}
               id="title"
-              className="w-full p-2 border rounded"
+              className="flex-grow p-2 border rounded"
             />
           </div>
-          <div className="flex flex-row mb-4">
-            <label className="w-20 mr-48" htmlFor="content">
+          <div className="mb-4 flex flex-row items-center">
+            <label className="w-20 text-right mr-12 font-extrabold" htmlFor="content">
               내용
             </label>
             <Textarea
               {...register('content', { required: true })}
               id="content"
-              className="w-full p-2 border rounded"
+              className="flex-grow p-2 border rounded"
             />
           </div>
-          <div className="flex flex-row mb-4">
-            <label className="w-20 mr-48" htmlFor="hashtags">
-              파일 선택
+          <div className="mb-4 flex flex-row items-center">
+            <label className="w-20 text-right mr-12 font-extrabold" htmlFor="fileAttachment">
+              파일 첨부
             </label>
             <Input
               {...register('fileAttachment')}
               id="fileAttachment"
               type="file"
               onChange={handleFileChange}
-              className="w-full p-2 border-[1px] border-black rounded hidden"
+              className="hidden"
             />
             <Input
               type="text"
               onClick={openFileSelector}
               value={fileLabel || '파일 선택'}
               readOnly
-              className="w-full p-2 border-[1px] border-black rounded cursor-pointer"
+              className="flex-grow p-2 border-[1px] border-black rounded cursor-pointer"
               placeholder="파일 선택"
             />
           </div>
-          <div className="flex flex-row mb-4">
-            <label className="w-20 mr-48" htmlFor="hashtags">
+          <div className="mb-4 flex flex-row items-center">
+            <label className="w-20 text-right mr-12 font-extrabold" htmlFor="hashtags">
               해시태그
             </label>
             <Input
               {...register('hashtags')}
               id="hashtags"
-              className="w-full p-2 border rounded"
+              className="flex-grow p-2 border rounded"
               placeholder=",로 구분하여 입력하세요. 예) #miniIntern, #weirdSector"
             />
           </div>
