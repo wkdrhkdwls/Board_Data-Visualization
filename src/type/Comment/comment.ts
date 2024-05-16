@@ -19,3 +19,7 @@ export type ReplyType = {
 export type CommentReplySectionDTO = {
   commentId: number;
 };
+
+export type CommentFormDataDTO = {
+  content: string;
+};

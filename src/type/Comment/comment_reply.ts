@@ -5,3 +5,6 @@ export type ReplyDTO = {
   created_at: string;
   user_id: string;
 };
+export type ReplyFormDataDTO = {
+  replyContent: string;
+};
