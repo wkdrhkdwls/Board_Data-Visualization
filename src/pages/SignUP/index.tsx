@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { SignUpFormInputDTO } from '@/type/SignUp/Signup';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useState } from 'react';
+import TogglePasswordVisibleButton from '@/utils/PasswordVisible';
 
 // 회원가입 폼 유효성 검사
 const signUpFormSchema = z
@@ -30,6 +32,9 @@ const signUpFormSchema = z
 const SignUpPage = () => {
   // 페이지 이동
   const navigate = useNavigate();
+  // 비밀번호 보이기 여부를 관리하기 위한 상태
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   // react-hook-form을 사용한 회원가입 폼
   const {
@@ -39,6 +44,14 @@ const SignUpPage = () => {
   } = useForm<SignUpFormInputDTO>({
     resolver: zodResolver(signUpFormSchema),
   });
+
+  // 비밀번호 보이기/숨기기 토글
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const togglePasswordConfirmVisibility = () => {
+    setShowPasswordConfirm(!showPasswordConfirm);
+  };
 
   // 회원가입 완료 & 회원가입 완료 페이지로 이동
   const signupHandler: SubmitHandler<SignUpFormInputDTO> = () => {
@@ -61,29 +74,40 @@ const SignUpPage = () => {
               type="email"
               {...register('email')}
               placeholder="이메일 주소"
-              className="self-stretch  flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
+              className="self-stretch mt-2 flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
             />
             <p className="text-red-500 text-xs italic">{errors.email?.message}</p>
           </div>
 
-          <div className="mb-10">
+          <div className="mb-4">
             <Label className="font-bold" htmlFor="password">
               비밀번호
             </Label>
-            <Input
-              type="password"
-              {...register('password')}
-              placeholder="8자 이상, 영문자, 숫자, 특수기호중 2가지 조합"
-              className="self-stretch  flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
-            />
-            <p className="text-red-500 text-xs italic">{errors.password?.message}</p>
+
+            <div className="relative mt-2">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                {...register('password')}
+                placeholder="8자 이상, 영문자, 숫자, 특수기호중 2가지 조합"
+                className="self-stretch  flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
+              />
+              <TogglePasswordVisibleButton
+                isVisible={showPassword}
+                onToggle={togglePasswordVisibility}
+              />
+              <p className="text-red-500 text-xs italic">{errors.password?.message}</p>
+            </div>
           </div>
-          <div className="mb-10">
+          <div className="relative mb-10">
             <Input
-              type="password"
+              type={showPasswordConfirm ? 'text' : 'password'}
               {...register('passwordConfirm')}
               placeholder="비밀번호를 다시 입력해주세요"
-              className="self-stretch  flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
+              className="self-stretch flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
+            />
+            <TogglePasswordVisibleButton
+              isVisible={showPasswordConfirm}
+              onToggle={togglePasswordConfirmVisibility}
             />
             <p className="text-red-500 text-xs italic">{errors.passwordConfirm?.message}</p>
           </div>
@@ -94,7 +118,7 @@ const SignUpPage = () => {
             <Input
               {...register('nickname')}
               placeholder="닉네임을 입력해주세요"
-              className="self-stretch  flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
+              className="self-stretch mt-2 flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
             />
             <p className="text-red-500 text-xs italic">{errors.nickname?.message}</p>
           </div>
