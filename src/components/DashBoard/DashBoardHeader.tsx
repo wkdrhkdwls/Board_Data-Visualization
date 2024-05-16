@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 
 const DashBoardHeader = () => {
   // 선택된 버튼의 상태를 관리하는 state
-  const [selected, setSelected] = useState('자유 게시판');
+  const [selected, setSelected] = useState<string>(() => {
+    // 페이지가 로드될 때 sessionStorage에서 상태를 복원
+    const saved = sessionStorage.getItem('selectedBoard');
+    return saved ? saved : '자유 게시판';
+  });
+
+  useEffect(() => {
+    // 상태가 변경될 때마다 sessionStorage에 저장
+    sessionStorage.setItem('selectedBoard', selected);
+  }, [selected]);
 
   return (
     <div className="flex flex-col items-center justify-center p-4">
@@ -15,7 +24,7 @@ const DashBoardHeader = () => {
           {selected}
         </h2>
       </div>
-      <div>
+      <div className="mobile:flex mobile:flex-row mobile:">
         <Button
           className={`py-2 px-4 rounded ${selected === '자유 게시판' ? 'bg-[#EE3918] text-white' : 'bg-[#eee] text-black'}`}
           onClick={() => setSelected('자유 게시판')}

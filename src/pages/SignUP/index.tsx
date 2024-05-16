@@ -122,17 +122,19 @@ const SignUpPage = () => {
             />
             <p className="text-red-500 text-xs italic">{errors.nickname?.message}</p>
           </div>
-          <div className="flex items-center space-x-2 mb-20">
+          <div className="flex items-center space-x-2 mb-20 ">
             <Checkbox id="terms" className="w-6 h-6 rounded-md " required />
             <label
               htmlFor="terms"
-              className="flex flex-row text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="flex flex-row text-sm mobile:text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              <p className="flex-grow-0 flex-shrink-0 text-base font-medium text-left text-[#505050]">
+              <p className="flex-grow-0 flex-shrink-0 text-base mobile:text-xs font-medium text-left text-[#505050]">
                 개인정보 처리방침 / 데이터 활용 동의
               </p>
               <div className="flex justify-start items-start flex-grow-0 flex-shrink-0 w-[41px] relative gap-2.5">
-                <p className="flex-grow w-[41px] text-base text-left text-[#9a9a9a]">(필수)</p>
+                <p className="flex-grow w-[41px] text-base mobile:text-xs text-left text-[#9a9a9a] ">
+                  (필수)
+                </p>
               </div>
             </label>
           </div>

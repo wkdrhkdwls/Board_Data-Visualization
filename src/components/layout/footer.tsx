@@ -3,10 +3,10 @@ const Footer = () => {
     <div className="w-full h-auto font-bold bg-white border-t border-gray-200">
       <div
         id="sectorOne"
-        className="container mx-auto px-4 my-28 flex flex-col tablet:flex-row desktop:flex-row mobile:flex-col justify-between items-start py-4"
+        className="container mx-auto px-4 my-28 flex flex-col tablet:flex-row desktop:flex-row mobile:flex-col  justify-between items-start py-4"
       >
         <p className="text-base font-bold">개발자 테스트용</p>
-        <div className="text-sm space-y-1">
+        <div className="text-sm space-y-1 mobile:mb-9">
           <p>대표 홍길동 ㅣ 사업자 등록 번호 123-4567-890</p>
           <p>서울특별시 가가동 나나로 111-2 8층</p>
           <p>통신 판매업 신고 제 2014-서울홍홍홍 0291호</p>

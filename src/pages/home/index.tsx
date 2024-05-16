@@ -68,7 +68,10 @@ function Home() {
             goPostDetail={goPostDetail}
             isLoading={isLoading}
           />
-          <Button onClick={handleCreatePost} className="absolute -bottom-2 right-5 w-24">
+          <Button
+            onClick={handleCreatePost}
+            className="absolute -bottom-2 mobile:-bottom-10 right-5 w-24"
+          >
             글쓰기
           </Button>
         </div>

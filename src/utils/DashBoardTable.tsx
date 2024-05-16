@@ -36,13 +36,13 @@ export function DashBoardTable({
       ) : (
         <>
           <Table className="border-b-[1px] font-bold border-[#e1e1e1] text-center">
-            <TableHeader className="border-t-[2px] border-black">
+            <TableHeader className="border-t-[2px] mobile:text-xs border-black">
               <TableRow className="w-full ">
                 <TableHead className="w-[6%] mobile:w-1/12 tablet:w-1/12 text-center">NO</TableHead>
-                <TableHead className="w-[52%] mobile:w-10/12 tablet:w-8/12 text-center">
+                <TableHead className="w-[52%] mobile:w-8/12 tablet:w-8/12 text-center">
                   제목
                 </TableHead>
-                <TableHead className="w-[14%] mobile:w-1/12 tablet:w-1/12 text-center">
+                <TableHead className="w-[14%] mobile:w-3/12 tablet:w-1/12 text-center">
                   글쓴이
                 </TableHead>
                 <TableHead className="w-[14%] text-center tablet:w-1/12 mobile:hidden">
