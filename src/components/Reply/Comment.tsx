@@ -2,11 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
 import { deleteCommentById, fetchComments, sendComment } from '@/services/Comment/commentAPI';
-import {
-  deleteCommentReplyById,
-  fetchCommentReplies,
-  sendCommentReply,
-} from '@/services/Comment/commentReplyAPI';
+import { fetchCommentReplies, sendCommentReply } from '@/services/Comment/commentReplyAPI';
 import { CommentType } from '@/type/Comment/comment';
 import { formatDate } from '@/utils/changeDateTime';
 import { useEffect, useState } from 'react';
@@ -16,18 +12,19 @@ import { useToast } from '../ui/use-toast';
 import { useNavigate } from 'react-router-dom';
 import DeleteModal from '@/utils/Modal';
 import { EllipsisOutlined } from '@ant-design/icons';
+import useCommentStore from '@/store/commentStore';
 
 const CommentSection = () => {
   const { nickname, accessToken, userId } = useAuth();
   const navigate = useNavigate();
   const [content, setContent] = useState('');
-  const [comments, setComments] = useState([] as any[]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
   const [replyVisibility, setReplyVisibility] = useState<Record<number, boolean>>({});
   const { postId } = usePostStore();
   const { toast } = useToast();
+  const { comments, setComments, addComment, deleteComment, addReply } = useCommentStore();
 
   const closeModal = () => setModalOpen(false);
 
@@ -43,6 +40,7 @@ const CommentSection = () => {
     }
   };
 
+  // 댓글 작성
   const handleCommentSubmit = async () => {
     // Check if the user is authenticated
     if (!accessToken) {
@@ -56,9 +54,10 @@ const CommentSection = () => {
 
     // If authenticated, proceed with the comment submission
     try {
-      await sendComment(nickname, content, postId!, userId!);
-      console.log('Comment added successfully');
-
+      const newComment = await sendComment(nickname, content, postId!, userId!);
+      if (newComment) {
+        addComment(newComment);
+      }
       setContent('');
       loadComments();
     } catch (error: any) {
@@ -66,11 +65,13 @@ const CommentSection = () => {
     }
   };
 
-  const handleReplySubmit = async (commentId: number, content: string, userId: string) => {
+  // 대댓글 작성
+  const handleReplySubmit = async (commentId: number, content: string) => {
     try {
-      await sendCommentReply(nickname, content, commentId, userId!);
-
-      loadComments();
+      const newReply = await sendCommentReply(nickname, content, commentId, userId!);
+      if (newReply) {
+        addReply(commentId, newReply);
+      }
     } catch (error: any) {
       console.error('Error sending reply:', error.message);
     }
@@ -88,20 +89,17 @@ const CommentSection = () => {
     setSelectedCommentId(commentId); // Set selected comment ID
     setModalOpen(true);
   };
-
   const handleDeleteComment = async () => {
     if (selectedCommentId !== null) {
       try {
-        await deleteCommentReplyById(selectedCommentId);
         await deleteCommentById(selectedCommentId);
-        loadComments();
+        deleteComment(selectedCommentId);
         setModalOpen(false);
       } catch (error: any) {
         console.error('Error deleting comment:', error.message);
       }
     }
   };
-
   useEffect(() => {
     loadComments();
   }, [postId]);

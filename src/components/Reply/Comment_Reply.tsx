@@ -5,32 +5,19 @@ import { Input } from '@/components/ui/input';
 import { formatDate } from '@/utils/changeDateTime';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '../ui/use-toast';
-import { useNavigate } from 'react-router-dom';
 import DeleteModal from '@/utils/Modal';
-import { deleteCommentReplyById } from '@/services/Comment/commentReplyAPI';
 import { EllipsisOutlined } from '@ant-design/icons';
+import useCommentStore from '@/store/commentStore';
+import { sendCommentReply } from '@/services/Comment/commentReplyAPI';
 
-export type ReplyType = {
-  id: number;
-  nickname: string;
-  content: string;
-  created_at: string;
-  user_id: string;
-};
-
-const CommentReplySection = ({
-  commentId,
-  replies,
-  onSubmitReply,
-  onDeleteReply,
-}: CommentReplySectionDTO) => {
-  const { accessToken, userId } = useAuth();
-  const navigate = useNavigate();
+const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
+  const { nickname, accessToken, userId } = useAuth();
   const [replyContent, setReplyContent] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedReplyId, setSelectedReplyId] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
   const { toast } = useToast();
+  const { comments, addReply, deleteReply } = useCommentStore();
 
   const closeModal = () => setModalOpen(false);
 
@@ -40,12 +27,14 @@ const CommentReplySection = ({
         title: '로그인이 필요합니다.',
         duration: 3000,
       });
-      navigate('/login');
       return;
     }
 
     try {
-      await onSubmitReply(commentId, replyContent, userId!);
+      const newReply = await sendCommentReply(nickname, replyContent, commentId, userId!);
+      if (newReply) {
+        addReply(commentId, newReply);
+      }
       setReplyContent('');
     } catch (error: any) {
       console.error('Error sending reply:', error.message);
@@ -60,9 +49,8 @@ const CommentReplySection = ({
   const handleDeleteReply = async () => {
     if (selectedReplyId !== null) {
       try {
-        await deleteCommentReplyById(selectedReplyId);
+        deleteReply(commentId, selectedReplyId);
         setModalOpen(false);
-        onDeleteReply();
         toast({
           title: '대댓글 삭제 성공',
           duration: 3000,
@@ -83,6 +71,8 @@ const CommentReplySection = ({
     setShowOptions((prev) => ({ ...prev, [replyId]: !prev[replyId] }));
   };
 
+  const comment = comments.find((c) => c.id === commentId);
+
   return (
     <div className="ml-4 mt-2">
       <div className="mt-2">
@@ -90,7 +80,7 @@ const CommentReplySection = ({
         <Button onClick={handleReplySubmit}>답글</Button>
       </div>
       <div className="ml-4 mt-2">
-        {replies?.map((reply: ReplyType) => (
+        {comment?.replies?.map((reply) => (
           <div key={reply.id} className="mb-2">
             <p className="font-bold">{reply.nickname}</p>
             {reply.user_id === userId && (
@@ -108,7 +98,6 @@ const CommentReplySection = ({
                 )}
               </div>
             )}
-
             <p>{reply.content}</p>
             <p className="text-sm text-gray-500">{formatDate(reply.created_at)}</p>
           </div>

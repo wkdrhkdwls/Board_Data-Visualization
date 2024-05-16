@@ -7,12 +7,13 @@ export type CommentType = {
   user_id: string;
 };
 
-type ReplyType = {
+export type ReplyType = {
   id: number;
   nickname: string;
   content: string;
   created_at: string;
   comment_id: number;
+  user_id: string;
 };
 
 export type CommentReplySectionDTO = {
