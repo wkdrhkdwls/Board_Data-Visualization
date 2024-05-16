@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
 import { deleteCommentById, fetchComments, sendComment } from '@/services/Comment/commentAPI';
 import {
-  deleteCommentReplies,
+  deleteCommentReplyById,
   fetchCommentReplies,
   sendCommentReply,
 } from '@/services/Comment/commentReplyAPI';
@@ -66,9 +66,9 @@ const CommentSection = () => {
     }
   };
 
-  const handleReplySubmit = async (commentId: number, content: string) => {
+  const handleReplySubmit = async (commentId: number, content: string, userId: string) => {
     try {
-      await sendCommentReply(nickname, content, commentId);
+      await sendCommentReply(nickname, content, commentId, userId!);
 
       loadComments();
     } catch (error: any) {
@@ -92,7 +92,7 @@ const CommentSection = () => {
   const handleDeleteComment = async () => {
     if (selectedCommentId !== null) {
       try {
-        await deleteCommentReplies(selectedCommentId);
+        await deleteCommentReplyById(selectedCommentId);
         await deleteCommentById(selectedCommentId);
         loadComments();
         setModalOpen(false);
@@ -105,7 +105,7 @@ const CommentSection = () => {
   useEffect(() => {
     loadComments();
   }, [postId]);
-  console.log(comments);
+
   return (
     <div>
       <div className="flex flex-row justify-between">
@@ -147,6 +147,7 @@ const CommentSection = () => {
                 commentId={comment.id}
                 replies={comment.replies || []}
                 onSubmitReply={handleReplySubmit}
+                onDeleteReply={loadComments}
               />
             )}
           </div>

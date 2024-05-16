@@ -12,10 +12,15 @@ export const fetchCommentReplies = async (commentId: number) => {
   return data;
 };
 
-export const sendCommentReply = async (nickname: string, content: string, commentId: number) => {
+export const sendCommentReply = async (
+  nickname: string,
+  content: string,
+  commentId: number,
+  userId: string,
+) => {
   const { data, error } = await supabase
     .from('comment_reply')
-    .insert([{ nickname, content, comment_id: commentId }]);
+    .insert([{ nickname, content, comment_id: commentId, user_id: userId }]);
 
   if (error) {
     throw new Error(error.message);
@@ -23,7 +28,9 @@ export const sendCommentReply = async (nickname: string, content: string, commen
   return data;
 };
 
-export const deleteCommentReplies = async (commentId: number): Promise<void> => {
-  const { error } = await supabase.from('comment_reply').delete().match({ comment_id: commentId });
-  if (error) throw new Error(error.message);
+export const deleteCommentReplyById = async (replyId: number): Promise<void> => {
+  const { error } = await supabase.from('comment_reply').delete().match({ id: replyId });
+  if (error) {
+    throw new Error(error.message);
+  }
 };

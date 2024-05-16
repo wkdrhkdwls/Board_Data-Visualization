@@ -18,5 +18,6 @@ type ReplyType = {
 export type CommentReplySectionDTO = {
   commentId: number;
   replies: any[];
-  onSubmitReply: (commentId: number, content: string) => Promise<void>;
+  onSubmitReply: (commentId: number, content: string, userId: string) => Promise<void>;
+  onDeleteReply: () => void;
 };
