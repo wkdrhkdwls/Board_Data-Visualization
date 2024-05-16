@@ -1,114 +1,47 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
-import { deleteCommentById, fetchComments, sendComment } from '@/services/Comment/commentAPI';
-import { fetchCommentReplies, sendCommentReply } from '@/services/Comment/commentReplyAPI';
-import { CommentType } from '@/type/Comment/comment';
 import { formatDate } from '@/utils/changeDateTime';
 import { useEffect, useState } from 'react';
 import CommentReplySection from '@/components/Reply/Comment_Reply';
 import usePostStore from '@/store/postStore';
-import { useToast } from '../ui/use-toast';
-import { useNavigate } from 'react-router-dom';
 import DeleteModal from '@/utils/Modal';
 import { EllipsisOutlined } from '@ant-design/icons';
-import useCommentStore from '@/store/commentStore';
+import { useCommentActions } from '@/hooks/useComment';
 
 const CommentSection = () => {
-  const { nickname, accessToken, userId } = useAuth();
-  const navigate = useNavigate();
-  const [content, setContent] = useState('');
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
-  const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
-  const [replyVisibility, setReplyVisibility] = useState<Record<number, boolean>>({});
   const { postId } = usePostStore();
-  const { toast } = useToast();
-  const { comments, setComments, addComment, deleteComment, addReply } = useCommentStore();
+  const { userId } = useAuth();
+  const {
+    comments,
+    isModalOpen,
+    closeModal,
+    setModalOpen,
+    setSelectedCommentId,
+    showOptions,
+    replyVisibility,
+    loadComments,
+    handleCommentSubmit,
+    handleDeleteComment,
+    toggleReplyInput,
+    toggleOptions,
+  } = useCommentActions(postId!);
+  const [content, setContent] = useState('');
 
-  const closeModal = () => setModalOpen(false);
-
-  const loadComments = async () => {
-    try {
-      const data: CommentType[] = await fetchComments(postId!);
-      for (const comment of data) {
-        comment.replies = await fetchCommentReplies(comment.id);
-      }
-      setComments(data);
-    } catch (error: any) {
-      console.error('Error fetching comments:', error.message);
-    }
-  };
-
-  // 댓글 작성
-  const handleCommentSubmit = async () => {
-    // Check if the user is authenticated
-    if (!accessToken) {
-      toast({
-        title: '로그인이 필요합니다.',
-        duration: 3000,
-      });
-      navigate('/login');
-      return;
-    }
-
-    // If authenticated, proceed with the comment submission
-    try {
-      const newComment = await sendComment(nickname, content, postId!, userId!);
-      if (newComment) {
-        addComment(newComment);
-      }
-      setContent('');
-      loadComments();
-    } catch (error: any) {
-      console.error('Error sending comment:', error.message);
-    }
-  };
-
-  // 대댓글 작성
-  const handleReplySubmit = async (commentId: number, content: string) => {
-    try {
-      const newReply = await sendCommentReply(nickname, content, commentId, userId!);
-      if (newReply) {
-        addReply(commentId, newReply);
-      }
-    } catch (error: any) {
-      console.error('Error sending reply:', error.message);
-    }
-  };
-
-  const toggleReplyInput = (commentId: number) => {
-    setReplyVisibility((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
-  };
-
-  const toggleOptions = (commentId: number) => {
-    setShowOptions((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
-  };
-
-  const openDeleteModal = (commentId: number) => {
-    setSelectedCommentId(commentId); // Set selected comment ID
-    setModalOpen(true);
-  };
-  const handleDeleteComment = async () => {
-    if (selectedCommentId !== null) {
-      try {
-        await deleteCommentById(selectedCommentId);
-        deleteComment(selectedCommentId);
-        setModalOpen(false);
-      } catch (error: any) {
-        console.error('Error deleting comment:', error.message);
-      }
-    }
-  };
   useEffect(() => {
     loadComments();
   }, [postId]);
+
+  const openDeleteModal = (commentId: number) => {
+    setSelectedCommentId(commentId);
+    setModalOpen(true);
+  };
 
   return (
     <div>
       <div className="flex flex-row justify-between">
         <Input value={content} onChange={(e) => setContent(e.target.value)} />
-        <Button onClick={handleCommentSubmit}>댓글작성</Button>
+        <Button onClick={() => handleCommentSubmit(content)}>댓글작성</Button>
       </div>
       <div>
         {comments.map((comment) => (
@@ -140,27 +73,19 @@ const CommentSection = () => {
                 답글
               </button>
             </div>
-            {replyVisibility[comment.id] && (
-              <CommentReplySection
-                commentId={comment.id}
-                replies={comment.replies || []}
-                onSubmitReply={handleReplySubmit}
-                onDeleteReply={loadComments}
-              />
-            )}
+            {replyVisibility[comment.id] && <CommentReplySection commentId={comment.id} />}
           </div>
         ))}
       </div>
-      {selectedCommentId !== null && (
-        <DeleteModal
-          title="댓글삭제"
-          content="해당 댓글을 삭제하시겠습니까?"
-          modalOpen={isModalOpen}
-          setModalOpen={setModalOpen}
-          onClose={closeModal}
-          onDelete={handleDeleteComment}
-        />
-      )}
+
+      <DeleteModal
+        title="댓글삭제"
+        content="해당 댓글을 삭제하시겠습니까?"
+        modalOpen={isModalOpen}
+        setModalOpen={setModalOpen}
+        onClose={closeModal}
+        onDelete={handleDeleteComment}
+      />
     </div>
   );
 };

@@ -4,80 +4,31 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatDate } from '@/utils/changeDateTime';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '../ui/use-toast';
 import DeleteModal from '@/utils/Modal';
 import { EllipsisOutlined } from '@ant-design/icons';
 import useCommentStore from '@/store/commentStore';
-import { sendCommentReply } from '@/services/Comment/commentReplyAPI';
+import { useCommentActions } from '@/hooks/useComment';
 
 const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
-  const { nickname, accessToken, userId } = useAuth();
+  const { userId } = useAuth();
+  const { comments } = useCommentStore();
+
   const [replyContent, setReplyContent] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedReplyId, setSelectedReplyId] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
-  const { toast } = useToast();
-  const { comments, addReply, deleteReply } = useCommentStore();
+  const { handleReplySubmit, handleDeleteReply, closeModal } = useCommentActions(commentId);
 
-  const closeModal = () => setModalOpen(false);
-
-  const handleReplySubmit = async () => {
-    if (!accessToken) {
-      toast({
-        title: '로그인이 필요합니다.',
-        duration: 3000,
-      });
-      return;
-    }
-
-    try {
-      const newReply = await sendCommentReply(nickname, replyContent, commentId, userId!);
-      if (newReply) {
-        addReply(commentId, newReply);
-      }
-      setReplyContent('');
-    } catch (error: any) {
-      console.error('Error sending reply:', error.message);
-    }
-  };
-
+  const comment = comments.find((c) => c.id === commentId);
   const openDeleteModal = (replyId: number) => {
     setSelectedReplyId(replyId);
     setModalOpen(true);
   };
-
-  const handleDeleteReply = async () => {
-    if (selectedReplyId !== null) {
-      try {
-        deleteReply(commentId, selectedReplyId);
-        setModalOpen(false);
-        toast({
-          title: '대댓글 삭제 성공',
-          duration: 3000,
-        });
-      } catch (error: any) {
-        console.error('Error deleting reply:', error.message);
-        toast({
-          variant: 'destructive',
-          title: '대댓글 삭제에 실패했습니다.',
-          description: error.message,
-          duration: 3000,
-        });
-      }
-    }
-  };
-
-  const toggleOptions = (replyId: number) => {
-    setShowOptions((prev) => ({ ...prev, [replyId]: !prev[replyId] }));
-  };
-
-  const comment = comments.find((c) => c.id === commentId);
-
   return (
     <div className="ml-4 mt-2">
       <div className="mt-2">
         <Input value={replyContent} onChange={(e) => setReplyContent(e.target.value)} />
-        <Button onClick={handleReplySubmit}>답글</Button>
+        <Button onClick={() => handleReplySubmit(commentId, replyContent)}>답글</Button>
       </div>
       <div className="ml-4 mt-2">
         {comment?.replies?.map((reply) => (
@@ -85,7 +36,11 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
             <p className="font-bold">{reply.nickname}</p>
             {reply.user_id === userId && (
               <div className="relative inline-block">
-                <button onClick={() => toggleOptions(reply.id)}>
+                <button
+                  onClick={() =>
+                    setShowOptions((prev) => ({ ...prev, [reply.id]: !prev[reply.id] }))
+                  }
+                >
                   <EllipsisOutlined />
                 </button>
                 {showOptions[reply.id] && (
@@ -103,16 +58,15 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
           </div>
         ))}
       </div>
-      {selectedReplyId !== null && (
-        <DeleteModal
-          title="대댓글삭제"
-          content="해당 대댓글을 삭제하시겠습니까?"
-          modalOpen={isModalOpen}
-          setModalOpen={setModalOpen}
-          onClose={closeModal}
-          onDelete={handleDeleteReply}
-        />
-      )}
+
+      <DeleteModal
+        title="대댓글삭제"
+        content="해당 대댓글을 삭제하시겠습니까?"
+        modalOpen={isModalOpen}
+        setModalOpen={setModalOpen}
+        onClose={closeModal}
+        onDelete={() => handleDeleteReply(commentId, selectedReplyId!)}
+      />
     </div>
   );
 };
