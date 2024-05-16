@@ -11,6 +11,7 @@ import SignUpPage from '@/pages/SignUP';
 import SignUpCompletePage from '@/pages/SignUpComplete';
 import CreatePostPage from '@/pages/Post/CreatePost';
 import DetailPostPage from '@/pages/Post/DetailPost';
+import ChartPage from '@/pages/Chart';
 
 const pageRoutes = {
   main: '/',
@@ -19,6 +20,7 @@ const pageRoutes = {
   signUpComplete: '/signup-complete',
   createPost: '/create-post',
   detailPost: '/post/:id',
+  chart: '/chart',
 };
 
 const CommonLayout = () => (
@@ -85,6 +87,18 @@ const router = createBrowserRouter([
       {
         path: pageRoutes.detailPost,
         element: <DetailPostPage />,
+        errorElement: <ErrorPage />,
+      },
+
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+  {
+    element: <CommonLayout />,
+    children: [
+      {
+        path: pageRoutes.chart,
+        element: <ChartPage />,
         errorElement: <ErrorPage />,
       },
 
