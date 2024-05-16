@@ -7,16 +7,19 @@ export type CommentType = {
   user_id: string;
 };
 
-type ReplyType = {
+export type ReplyType = {
   id: number;
   nickname: string;
   content: string;
   created_at: string;
   comment_id: number;
+  user_id: string;
 };
 
 export type CommentReplySectionDTO = {
   commentId: number;
-  replies: any[];
-  onSubmitReply: (commentId: number, content: string) => Promise<void>;
+};
+
+export type CommentFormDataDTO = {
+  content: string;
 };

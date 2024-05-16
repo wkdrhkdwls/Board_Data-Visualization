@@ -5,10 +5,11 @@ import { deletePost, fetchPostById } from '@/services/DashBoard/dashBoardAPI';
 import usePostStore from '@/store/postStore';
 import DeleteModal from '@/utils/Modal';
 import { getTimeDifference } from '@/utils/changeDateTime';
-import { EllipsisOutlined, LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { EllipsisVertical } from 'lucide-react';
 
 const DetailPostPage = () => {
   const { id } = useParams();
@@ -80,7 +81,7 @@ const DetailPostPage = () => {
               {post.user_id === userId && (
                 <div className="relative inline-block">
                   <button onClick={toggleOptions}>
-                    <EllipsisOutlined />
+                    <EllipsisVertical />
                   </button>
                   {showOptions && (
                     <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
@@ -97,7 +98,7 @@ const DetailPostPage = () => {
             <div className="flex flex-row  flex-grow-0 flex-shrink-0  gap-2 mb-4 text-sm">
               <p>{post.author}</p> <p className="text-[#808080]">|</p>
               <p>{getTimeDifference(post?.created_at)}</p> <p className="text-[#808080]">|</p>
-              <p>{post.views}</p>
+              <p>조회수 {post.views}</p>
             </div>
 
             <p className="mb-4">{post.content}</p>
