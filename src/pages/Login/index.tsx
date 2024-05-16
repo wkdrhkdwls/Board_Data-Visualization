@@ -4,11 +4,11 @@ import { Input } from '@/components/ui/input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { EyeFilled, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { LoginFormDTO } from '@/type/Login/Login';
 import { useToast } from '@/components/ui/use-toast';
 import { signInWithPassword } from '@/services/Login/loginAPI';
+import TogglePasswordVisibleButton from '@/utils/PasswordVisible';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -85,13 +85,10 @@ const LoginPage = () => {
               placeholder="비밀번호 입력"
               className="self-stretch flex-grow overflow-hidden gap-2.5 px-6 py-3.5 rounded bg-white border border-[#e1e1e1]"
             />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute  inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-            >
-              {showPassword ? <EyeInvisibleOutlined /> : <EyeFilled />}
-            </button>
+            <TogglePasswordVisibleButton
+              isVisible={showPassword}
+              onToggle={togglePasswordVisibility}
+            />
           </div>
           <div className="flex items-center justify-center mb-4">
             <Button type="submit" className="w-96 h-14">

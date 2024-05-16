@@ -17,6 +17,7 @@ const DeleteModal = ({
       onRequestClose={() => setModalOpen(false)}
       className="react-modal-content"
       overlayClassName="react-modal-overlay"
+      ariaHideApp={false}
     >
       <p className="flex-grow-0 flex-shrink-0 text-lg font-bold text-center text-black">{title}</p>
       <p className="flex-grow-0 flex-shrink-0 text-base text-center text-[#414040]">{content}</p>
