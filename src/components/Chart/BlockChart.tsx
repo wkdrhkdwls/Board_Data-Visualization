@@ -72,7 +72,7 @@ const BlockChart = ({ data }: Props) => {
   }, [data, size]);
 
   return (
-    <div ref={rootRef} className="w-full h-64">
+    <div ref={rootRef} className="w-full min-h-64 border border-[#eee] p-4">
       <h2 className="font-bold">해시태그별 게시글 등록 수</h2>
       <svg ref={svgRef} width={size.width} height={size.height}>
         <g className="x-axis" />

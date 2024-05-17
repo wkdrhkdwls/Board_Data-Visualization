@@ -1,0 +1,20 @@
+.day-picker .custom-selected {
+  background-color: #ffb300 !important;
+  color: white;
+}
+.custom-today {
+  color: #ffa115;
+}
+
+.day-picker .custom-range-middle {
+  background-color: #fff1d1;
+}
+
+.popover-content {
+  width: 350px;
+  max-width: none;
+}
+
+.day-picker {
+  width: 100%;
+}

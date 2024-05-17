@@ -81,6 +81,7 @@ export function DashBoardTable({
                   <PaginationLink
                     onClick={() => setCurrentPage(index + 1)}
                     isActive={currentPage === index + 1}
+                    className={currentPage === index + 1 ? 'text-[#EE3918]' : ''}
                   >
                     {index + 1}
                   </PaginationLink>
