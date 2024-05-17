@@ -85,7 +85,7 @@ const StackedBarChart = ({ data }: Props) => {
       .data(stackedData)
       .join('g')
       .attr('class', 'layer')
-      .attr('fill', (d, i) => colors[i])
+      .attr('fill', (_, i) => colors[i])
       .selectAll('rect')
       .data((d) => d)
       .join('rect')
@@ -101,14 +101,14 @@ const StackedBarChart = ({ data }: Props) => {
       .enter()
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', (d, i) => `translate(${width - PADDING - 300 + i * 100}, ${PADDING / 2})`);
+      .attr('transform', (_, i) => `translate(${width - PADDING - 300 + i * 100}, ${PADDING / 2})`);
 
     legend
       .append('circle')
       .attr('cx', 9)
       .attr('cy', 9)
       .attr('r', 9)
-      .style('fill', (d, i) => colors[i]);
+      .style('fill', (_, i) => colors[i]);
 
     legend
       .append('text')
