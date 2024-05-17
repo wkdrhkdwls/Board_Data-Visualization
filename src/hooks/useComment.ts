@@ -27,6 +27,8 @@ export const useCommentActions = (postId: number) => {
     setModalOpen(false);
     setSelectedReplyId(null);
   };
+
+  // 댓글, 대댓글 불러오기
   const loadComments = async () => {
     try {
       const data: CommentType[] = await fetchComments(postId);
@@ -39,6 +41,7 @@ export const useCommentActions = (postId: number) => {
     }
   };
 
+  // 댓글 작성
   const handleCommentSubmit = async (content: string) => {
     if (!accessToken) {
       toast({
@@ -59,6 +62,7 @@ export const useCommentActions = (postId: number) => {
     }
   };
 
+  // 대댓글 작성
   const handleReplySubmit = async (commentId: number, content: string) => {
     if (!accessToken) {
       toast({
@@ -78,6 +82,7 @@ export const useCommentActions = (postId: number) => {
     }
   };
 
+  // 댓글 삭제
   const handleDeleteComment = async () => {
     if (selectedCommentId !== null) {
       try {
@@ -90,6 +95,7 @@ export const useCommentActions = (postId: number) => {
     }
   };
 
+  // 대댓글 삭제
   const handleDeleteReply = async (commentId: number, replyId: number) => {
     try {
       await deleteCommentReplyById(replyId);
@@ -111,10 +117,12 @@ export const useCommentActions = (postId: number) => {
     }
   };
 
+  // 대댓글 입력창 토글
   const toggleReplyInput = (commentId: number) => {
     setReplyVisibility((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };
 
+  // 대댓글 옵션 토글
   const toggleOptions = (commentId: number) => {
     setShowOptions((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };

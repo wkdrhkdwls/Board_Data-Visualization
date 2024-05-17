@@ -6,6 +6,7 @@ const usePostStore = create<PostStoreDTO>((set) => ({
   postId: null,
   setPost: (post) => set({ post }),
   setPostId: (id) => set({ postId: id }),
+  clearPost: () => set({ post: null, postId: null }),
 }));
 
 export default usePostStore;

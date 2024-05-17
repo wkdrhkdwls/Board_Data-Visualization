@@ -3,4 +3,5 @@ export type PostStoreDTO = {
   postId: number | null;
   setPost: (post: any) => void;
   setPostId: (id: number) => void;
+  clearPost: () => void;
 };
