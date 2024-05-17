@@ -34,7 +34,7 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
     isModalOpen,
     selectedReplyId,
     setSelectedReplyId,
-  } = useCommentActions(postId!, commentId);
+  } = useCommentActions(postId!);
 
   const comment = comments.find((c) => c.id === commentId);
   const openDeleteModal = (replyId: number) => {
