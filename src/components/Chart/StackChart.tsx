@@ -11,19 +11,9 @@ import {
   range,
 } from 'd3';
 import { useResize } from '@/hooks/useResize';
+import { StackProps, StackedDataDTO } from '@/type/Chart/Chart';
 
-interface StackedData {
-  date: string;
-  자유게시판: number;
-  질문게시판: number;
-  기타게시판: number;
-}
-
-interface Props {
-  data: StackedData[];
-}
-
-const StackedBarChart = ({ data }: Props) => {
+const StackedBarChart = ({ data }: StackProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const size = useResize(rootRef);
@@ -38,7 +28,8 @@ const StackedBarChart = ({ data }: Props) => {
     const svg = select(svgRef.current);
     svg.selectAll('*').remove();
 
-    const keys = Object.keys(data[0]).slice(1);
+    // 데이터의 키값 설정
+    const keys = ['자유게시판', '질문게시판', '기타게시판'];
     const colors = ['#f99', '#99f', '#9f9'];
 
     const xScale = scaleBand()
@@ -51,17 +42,13 @@ const StackedBarChart = ({ data }: Props) => {
         0,
         Math.ceil(
           Math.max(
-            ...data.map((d) =>
-              Object.values(d)
-                .slice(1)
-                .reduce((a, b) => a + (b as number), 0),
-            ),
+            ...data.map((d) => keys.reduce((acc, key) => acc + ((d[key] as number) || 0), 0)),
           ) / 50,
         ) * 50,
       ])
       .range([height - PADDING, PADDING]);
 
-    const xAxis = axisBottom(xScale).tickFormat((d) => (d as string).slice(5));
+    const xAxis = axisBottom(xScale).tickFormat((d) => (typeof d === 'string' ? d.slice(5) : ''));
     svg
       .append('g')
       .attr('class', 'x-axis')
@@ -75,7 +62,7 @@ const StackedBarChart = ({ data }: Props) => {
       .attr('transform', `translate(${PADDING},0)`)
       .call(yAxis);
 
-    const stackedData = stack<StackedData>()
+    const stackedData = stack<StackedDataDTO>()
       .keys(keys)
       .order(stackOrderNone)
       .offset(stackOffsetNone)(data);

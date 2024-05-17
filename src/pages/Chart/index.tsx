@@ -6,37 +6,48 @@ import { groupDataByTag } from '@/utils/GroupByTag';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { stackedData } from '@/fixture/stackData';
 import { DatePickerWithRange } from '@/components/ui/dateRangePicker';
 import { useQuery } from '@tanstack/react-query';
+import { transformData } from '@/utils/transformData';
+import { PostStackChartDTO } from '@/type/Chart/Chart';
 
-const ChartPage = () => {
-  // useAuth 훅을 사용하여 닉네임 가져오기
+const ChartPage: React.FC = () => {
   const { nickname } = useAuth();
   const navigate = useNavigate();
 
-  // 날짜별 게시물 수 데이터 쿼리
   const { data: lineData } = useQuery({
     queryKey: ['postsGroupedByDate'],
     queryFn: fetchPostsGroupedByDate,
-    staleTime: 1000 * 60 * 5, // 5분 동안 캐싱된 데이터 사용
+    staleTime: 1000 * 60 * 5,
   });
 
-  // 모든 게시물 가져오기 쿼리
   const { data: allPostsData } = useQuery({
     queryKey: ['allPosts', 1, 100],
     queryFn: () => fetchPosts(1, 100),
-    staleTime: 1000 * 60 * 5, // 5분 동안 캐싱된 데이터 사용
+    staleTime: 1000 * 60 * 5,
   });
 
-  // 태그별 게시물 수 데이터 생성
+  console.log('allPostsData', allPostsData);
+
+  const { data: stackedData } = useQuery({
+    queryKey: ['stackedData', allPostsData],
+    queryFn: () => {
+      const posts: PostStackChartDTO[] =
+        allPostsData?.posts.map((post) => ({
+          created_at: new Date(post.created_at),
+          boardType: post.boardType,
+        })) || [];
+      return transformData(posts);
+    },
+    enabled: !!allPostsData,
+    staleTime: 1000 * 60 * 5,
+  });
+
   const blockData = allPostsData ? groupDataByTag(allPostsData.posts) : [];
 
-  // 홈으로 이동
   const handleHome = () => {
     navigate('/');
   };
-
   return (
     <div className="flex min-h-screen bg-white">
       <aside className="w-64 bg-white border-r border-gray-200">
@@ -82,7 +93,7 @@ const ChartPage = () => {
         <div className="p-4  grid grid-cols-2 gap-4 tablet:flex tablet:flex-col">
           <LineChart campaign={lineData || []} />
           <BlockChart data={blockData} />
-          <StackedBarChart data={stackedData} />
+          <StackedBarChart data={stackedData || []} />
         </div>
       </div>
     </div>

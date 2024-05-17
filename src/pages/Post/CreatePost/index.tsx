@@ -22,6 +22,8 @@ const CreatePostPage = () => {
   // 더미데이터로 랜덤 조회수 생성
   const randomViews = Math.floor(Math.random() * 100) + 1;
 
+  // 게시판 타입을 세션 스토리지에서 가져옴
+  const BoardType = sessionStorage.getItem('selectedBoard');
   // 파일 선택 시 파일 이름을 표시
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
@@ -45,6 +47,7 @@ const CreatePostPage = () => {
       hashtags: hashtags.split(',').map((tag: any) => tag.trim()),
       views: randomViews,
       user_id: userId || '',
+      boardType: BoardType || '',
     };
 
     // 게시글 작성 요청
