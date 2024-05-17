@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { axisBottom, axisLeft, scaleBand, scaleLinear, select } from 'd3';
+import { axisBottom, axisLeft, range, scaleBand, scaleLinear, select } from 'd3';
 import { useResize } from '@/hooks/useResize';
 
 interface TagData {
@@ -11,7 +11,7 @@ interface Props {
   data: TagData[];
 }
 
-const BarChart = ({ data }: Props) => {
+const BlockChart = ({ data }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const size = useResize(rootRef);
@@ -49,7 +49,7 @@ const BarChart = ({ data }: Props) => {
     const xScale = scaleBand()
       .domain(groupedData.map((d) => d.tag))
       .range([PADDING, width - PADDING])
-      .padding(0.2);
+      .padding(0.1);
 
     const yScale = scaleLinear()
       .domain([0, maxCount])
@@ -61,7 +61,7 @@ const BarChart = ({ data }: Props) => {
       .style('transform', `translateY(${height - PADDING}px)`)
       .call(xAxis);
 
-    const yAxis = axisLeft(yScale).ticks(7);
+    const yAxis = axisLeft(yScale).tickValues(range(0, Math.max(...yScale.domain()) + 1, 50));
     svg.select<SVGGElement>('.y-axis').style('transform', `translateX(${PADDING}px)`).call(yAxis);
 
     svg
@@ -86,4 +86,4 @@ const BarChart = ({ data }: Props) => {
   );
 };
 
-export default BarChart;
+export default BlockChart;

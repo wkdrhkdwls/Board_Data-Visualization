@@ -20,6 +20,10 @@ const Header = () => {
   const handleLogin = () => {
     navigate('/login');
   };
+  // 차트로 이동
+  const handleChart = () => {
+    navigate('/chart');
+  };
 
   // 모바일 메뉴 토글
   const toggleMobileMenu = () => {
@@ -53,7 +57,7 @@ const Header = () => {
             <Button onClick={handleHome} className="bg-white text-black text-lg mx-2">
               게시판
             </Button>
-            <Button onClick={() => {}} className="bg-white text-black text-lg mx-2">
+            <Button onClick={handleChart} className="bg-white text-black text-lg mx-2">
               대시보드
             </Button>
           </div>

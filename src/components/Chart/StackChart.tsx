@@ -8,6 +8,7 @@ import {
   stack,
   stackOrderNone,
   stackOffsetNone,
+  range,
 } from 'd3';
 import { useResize } from '@/hooks/useResize';
 
@@ -26,7 +27,7 @@ const StackedBarChart = ({ data }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const size = useResize(rootRef);
-  const PADDING = 40;
+  const PADDING = 30;
 
   useEffect(() => {
     if (!size || !data.length) {
@@ -35,35 +36,44 @@ const StackedBarChart = ({ data }: Props) => {
     const { width, height } = size;
 
     const svg = select(svgRef.current);
+    svg.selectAll('*').remove(); // Clear previous content
+
     const keys = Object.keys(data[0]).slice(1); // Get the keys excluding the date
     const colors = ['#f99', '#99f', '#9f9']; // Colors for each category
 
     const xScale = scaleBand()
       .domain(data.map((d) => d.date))
       .range([PADDING, width - PADDING])
-      .padding(0.2);
+      .padding(0.1);
 
     const yScale = scaleLinear()
       .domain([
         0,
-        Math.max(
-          ...data.map((d) =>
-            Object.values(d)
-              .slice(1)
-              .reduce((a, b) => a + (b as number), 0),
-          ),
-        ),
+        Math.ceil(
+          Math.max(
+            ...data.map((d) =>
+              Object.values(d)
+                .slice(1)
+                .reduce((a, b) => a + (b as number), 0),
+            ),
+          ) / 50,
+        ) * 50,
       ])
       .range([height - PADDING, PADDING]);
 
     const xAxis = axisBottom(xScale).tickFormat((d) => (d as string).slice(5));
     svg
-      .select<SVGGElement>('.x-axis')
-      .style('transform', `translateY(${height - PADDING}px)`)
+      .append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(0,${height - PADDING})`)
       .call(xAxis);
 
-    const yAxis = axisLeft(yScale).ticks(7);
-    svg.select<SVGGElement>('.y-axis').style('transform', `translateX(${PADDING}px)`).call(yAxis);
+    const yAxis = axisLeft(yScale).tickValues(range(0, Math.max(...yScale.domain()) + 1, 50));
+    svg
+      .append('g')
+      .attr('class', 'y-axis')
+      .attr('transform', `translate(${PADDING},0)`)
+      .call(yAxis);
 
     const stackedData = stack<StackedData>()
       .keys(keys)
