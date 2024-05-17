@@ -12,7 +12,7 @@ import {
 import { CommentType } from '@/type/Comment/comment';
 import { useQuery } from '@tanstack/react-query';
 
-export const useCommentActions = (postId: number, commentId?: number) => {
+export const useCommentActions = (postId: number) => {
   const { nickname, accessToken, userId } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
