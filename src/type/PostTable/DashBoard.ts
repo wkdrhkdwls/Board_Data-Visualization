@@ -8,6 +8,7 @@ export type PostDTO = {
   created_at: Date;
   views: number;
   user_id: string;
+  boardType: string;
 };
 
 export type DashBoardTableDTO = {
