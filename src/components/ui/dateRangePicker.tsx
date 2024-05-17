@@ -13,12 +13,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 export function DatePickerWithRange({ className }: React.HTMLAttributes<HTMLDivElement>) {
   const today = new Date();
-  const twoWeeksAgo = subDays(today, 14);
 
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: twoWeeksAgo,
-    to: today,
-  });
+  const [date, setDate] = React.useState<DateRange | undefined>(undefined);
 
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date(2024, 4, 9));
 
@@ -68,7 +64,7 @@ export function DatePickerWithRange({ className }: React.HTMLAttributes<HTMLDivE
                   format(date.from, 'yyyy/MM/dd')
                 )
               ) : (
-                <span>날짜를 선택해주세요</span>
+                <span>날짜 선택</span>
               )}
             </div>
             <ChevronDown className="ml-2" />
