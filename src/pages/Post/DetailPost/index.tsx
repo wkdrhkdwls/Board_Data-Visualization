@@ -23,7 +23,7 @@ const DetailPostPage = () => {
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
   // zustand로 data와 postId 전역관리
-  const { post, setPost, postId, setPostId } = usePostStore();
+  const { post, setPost, postId, setPostId, clearPost } = usePostStore();
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   // main.tsx에서 loading을 하므로 굳이 여기서 할 필요는 없다.
@@ -51,21 +51,21 @@ const DetailPostPage = () => {
     }
   };
 
-  // postId가 변경되면 postId를 업데이트
   useEffect(() => {
     if (id) {
       const postId = Number(id);
       setPostId(postId);
     }
-  }, [id, setPostId]);
 
-  // data가 변경되면 post를 업데이트
-  useEffect(() => {
     if (data) {
       setPost(data);
     }
-  }, [data, setPost]);
 
+    // 페이지 언마운트 시 clearPost 호출
+    return () => {
+      clearPost();
+    };
+  }, [id, postId, data, setPostId, setPost, clearPost]);
   return (
     <Layout>
       <>
@@ -104,12 +104,14 @@ const DetailPostPage = () => {
             <p className="mb-4">{post.content}</p>
             <div className="flex flex-row mb-4">
               <span className="font-semibold text-[#ee3918] mr-4">첨부된 파일:</span>
-              <p className="font-bold">{post.file_attachment.split('/').pop()}</p>
+              <p className="font-bold">
+                {post.file_attchment === '{}' ? post.file_attachment.split('/').pop() : null}
+              </p>
             </div>
             <div className="mb-4">
-              {post.hashtags?.map((tag: string, index: number) => (
+              {post.hashtags?.map((tag: string, _: number) => (
                 <span
-                  key={index}
+                  key={tag}
                   className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
                 >
                   #{tag}
