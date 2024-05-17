@@ -10,10 +10,12 @@ import useCommentStore from '@/store/commentStore';
 import { useCommentActions } from '@/hooks/useComment';
 import { useForm } from 'react-hook-form';
 import { ReplyFormDataDTO } from '@/type/Comment/comment_reply';
+import usePostStore from '@/store/postStore';
 
 const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
   const { userId } = useAuth();
   const { comments } = useCommentStore();
+  const { postId } = usePostStore();
 
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
 
@@ -32,7 +34,7 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
     isModalOpen,
     selectedReplyId,
     setSelectedReplyId,
-  } = useCommentActions(commentId);
+  } = useCommentActions(postId!);
 
   const comment = comments.find((c) => c.id === commentId);
   const openDeleteModal = (replyId: number) => {

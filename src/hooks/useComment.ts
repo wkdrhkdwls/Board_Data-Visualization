@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import useCommentStore from '@/store/commentStore';
@@ -10,6 +10,7 @@ import {
   deleteCommentReplyById,
 } from '@/services/Comment/commentReplyAPI';
 import { CommentType } from '@/type/Comment/comment';
+import { useQuery } from '@tanstack/react-query';
 
 export const useCommentActions = (postId: number) => {
   const { nickname, accessToken, userId } = useAuth();
@@ -27,18 +28,28 @@ export const useCommentActions = (postId: number) => {
     setModalOpen(false);
     setSelectedReplyId(null);
   };
-  const loadComments = async () => {
-    try {
-      const data: CommentType[] = await fetchComments(postId);
-      for (const comment of data) {
+
+  const { data, refetch } = useQuery({
+    queryKey: ['comments', postId],
+    queryFn: async () => {
+      const commentsData: CommentType[] = await fetchComments(postId);
+      for (const comment of commentsData) {
         comment.replies = await fetchCommentReplies(comment.id);
       }
-      setComments(data);
-    } catch (error: any) {
-      console.error('Error fetching comments:', error.message);
-    }
-  };
+      return commentsData;
+    },
+    enabled: !!postId,
+    staleTime: 1000 * 60 * 5, // refresh 5분
+    gcTime: 10 * 60 * 1000, // 캐시 데이터 10분
+  });
 
+  useEffect(() => {
+    if (data) {
+      setComments(data);
+    }
+  }, [data, setComments]);
+
+  // 댓글 작성
   const handleCommentSubmit = async (content: string) => {
     if (!accessToken) {
       toast({
@@ -53,12 +64,13 @@ export const useCommentActions = (postId: number) => {
       if (newComment) {
         addComment(newComment);
       }
-      loadComments();
+      refetch();
     } catch (error: any) {
       console.error('Error sending comment:', error.message);
     }
   };
 
+  // 대댓글 작성
   const handleReplySubmit = async (commentId: number, content: string) => {
     if (!accessToken) {
       toast({
@@ -73,28 +85,33 @@ export const useCommentActions = (postId: number) => {
       if (newReply) {
         addReply(commentId, newReply);
       }
+      refetch();
     } catch (error: any) {
       console.error('Error sending reply:', error.message);
     }
   };
 
+  // 댓글 삭제
   const handleDeleteComment = async () => {
     if (selectedCommentId !== null) {
       try {
         await deleteCommentById(selectedCommentId);
         deleteComment(selectedCommentId);
         setModalOpen(false);
+        refetch();
       } catch (error: any) {
         console.error('Error deleting comment:', error.message);
       }
     }
   };
 
+  // 대댓글 삭제
   const handleDeleteReply = async (commentId: number, replyId: number) => {
     try {
       await deleteCommentReplyById(replyId);
       deleteReply(commentId, replyId);
       setModalOpen(false);
+      refetch();
 
       toast({
         title: '대댓글 삭제 성공',
@@ -111,10 +128,12 @@ export const useCommentActions = (postId: number) => {
     }
   };
 
+  // 대댓글 입력창 토글
   const toggleReplyInput = (commentId: number) => {
     setReplyVisibility((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };
 
+  // 대댓글 옵션 토글
   const toggleOptions = (commentId: number) => {
     setShowOptions((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };
@@ -129,7 +148,7 @@ export const useCommentActions = (postId: number) => {
     selectedReplyId,
     showOptions,
     replyVisibility,
-    loadComments,
+    loadComments: refetch,
     handleCommentSubmit,
     handleReplySubmit,
     handleDeleteComment,

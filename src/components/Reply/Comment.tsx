@@ -47,7 +47,7 @@ const CommentSection = () => {
 
   useEffect(() => {
     loadComments();
-  }, [postId]);
+  }, [postId, loadComments]);
 
   return (
     <div>
@@ -90,7 +90,7 @@ const CommentSection = () => {
             <div className="flex flex-row gap-x-2">
               <p className="text-sm text-gray-500">{formatDate(comment.created_at)}</p>
               <button className="cursor-pointer" onClick={() => toggleReplyInput(comment.id)}>
-                답글
+                답글({comment.replies?.length || 0})
               </button>
             </div>
             {replyVisibility[comment.id] && <CommentReplySection commentId={comment.id} />}
