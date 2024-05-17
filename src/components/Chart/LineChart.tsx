@@ -3,18 +3,21 @@ import {
   axisBottom,
   axisLeft,
   scaleLinear,
-  scalePoint,
+  scaleTime,
   select,
   line,
   curveLinear,
-  range,
+  timeParse,
+  extent,
+  max,
+  timeFormat,
 } from 'd3';
 import { useResize } from '@/hooks/useResize';
 
 interface Props {
   campaign: {
     date: string;
-    people: number;
+    count: number;
   }[];
 }
 
@@ -22,7 +25,7 @@ const LineChart = ({ campaign }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const size = useResize(rootRef);
-  const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+  const PADDING = 50;
 
   useEffect(() => {
     if (!size || !campaign.length) {
@@ -31,65 +34,62 @@ const LineChart = ({ campaign }: Props) => {
     const { width, height } = size;
 
     const svg = select(svgRef.current);
-    svg.selectAll('*').remove(); // Clear previous content
+    const parseDate = timeParse('%Y-%m-%d');
+    const data = campaign.map((d) => ({ date: parseDate(d.date) as Date, count: d.count }));
 
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    // scaleTime에는 패딩을 못줘서 따로 계산
+    const xDomain = extent(data, (d) => d.date) as [Date, Date];
+    const xDomainPadded = [
+      new Date(xDomain[0].getTime() - (xDomain[1].getTime() - xDomain[0].getTime()) * 0.05),
+      new Date(xDomain[1].getTime() + (xDomain[1].getTime() - xDomain[0].getTime()) * 0.05),
+    ];
 
-    const peopleData = campaign.map((d) => d.people);
-
-    const xScale = scalePoint()
-      .domain(campaign.map((_, i) => i.toString()))
-      .range([0, innerWidth])
-      .padding(0.1);
+    const xScale = scaleTime()
+      .domain(xDomainPadded)
+      .range([PADDING, width - PADDING]);
 
     const yScale = scaleLinear()
-      .domain([0, Math.max(...peopleData)])
-      .range([innerHeight, 0]);
+      .domain([0, max(data, (d) => d.count) as number])
+      .range([height - PADDING, PADDING]);
 
-    const xAxis = axisBottom(xScale).tickFormat((_, i) => campaign[i].date);
+    const xAxis = axisBottom<Date>(xScale).tickFormat(timeFormat('%y.%m.%d'));
     svg
-      .append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', `translate(${margin.left},${margin.top + innerHeight})`)
+      .select<SVGGElement>('.x-axis')
+      .style('transform', `translateY(${height - PADDING}px)`)
       .call(xAxis);
 
-    const yAxis = axisLeft(yScale).tickValues(range(0, Math.max(...yScale.domain()) + 1, 50));
-    svg
-      .append('g')
-      .attr('class', 'y-axis')
-      .attr('transform', `translate(${margin.left},${margin.top})`)
-      .call(yAxis);
+    const yAxis = axisLeft(yScale).ticks(7);
+    svg.select<SVGGElement>('.y-axis').style('transform', `translateX(${PADDING}px)`).call(yAxis);
 
-    const lineGenerator = line<{ index: number; people: number }>()
-      .x((d) => xScale(d.index.toString()) ?? 0)
-      .y((d) => yScale(d.people))
-      .curve(curveLinear); // Straight lines
+    const lineGenerator = line<{ date: Date; count: number }>()
+      .x((d) => xScale(d.date))
+      .y((d) => yScale(d.count))
+      .curve(curveLinear);
 
     svg
-      .append('path')
-      .datum(campaign.map((d, i) => ({ index: i, people: d.people })))
+      .selectAll('.line')
+      .data([data])
+      .join('path')
       .attr('class', 'line')
-      .attr('d', lineGenerator as any)
+      .attr('d', lineGenerator)
       .attr('fill', 'none')
-      .attr('stroke', '#f99') // Color of the line
-      .attr('stroke-width', 2)
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+      .attr('stroke', '#f99')
+      .attr('stroke-width', 2);
 
     svg
       .selectAll('.dot')
-      .data(campaign.map((d, i) => ({ index: i, people: d.people })))
+      .data(data)
       .join('circle')
       .attr('class', 'dot')
-      .attr('cx', (d) => xScale(d.index.toString()) ?? 0)
-      .attr('cy', (d) => yScale(d.people))
+      .attr('cx', (d) => xScale(d.date))
+      .attr('cy', (d) => yScale(d.count))
       .attr('r', 6)
-      .attr('fill', '#f99') // Color of the dots
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+      .attr('fill', '#f99');
   }, [campaign, size]);
 
   return (
     <div ref={rootRef} className="w-full h-64">
+      <h2>날짜별 게시글 등록 수</h2>
       <svg ref={svgRef} width={size.width} height={size.height}>
         <g className="x-axis" />
         <g className="y-axis" />

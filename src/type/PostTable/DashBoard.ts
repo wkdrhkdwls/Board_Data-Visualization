@@ -25,3 +25,8 @@ export type FetchDataDTo = {
   posts: PostDTO[];
   total: number;
 };
+
+export type PostCountByDateDTO = {
+  date: string;
+  count: number;
+};

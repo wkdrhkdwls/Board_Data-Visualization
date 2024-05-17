@@ -96,7 +96,8 @@ const StackedBarChart = ({ data }: Props) => {
   }, [data, size]);
 
   return (
-    <div ref={rootRef} className="w-full h-64">
+    <div ref={rootRef} className="w-full min-h-64">
+      <h2>게시판별 게시글 등록 수</h2>
       <svg ref={svgRef} width={size.width} height={size.height}>
         <g className="x-axis" />
         <g className="y-axis" />

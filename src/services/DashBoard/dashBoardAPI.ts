@@ -1,5 +1,5 @@
 import { supabase } from '@/hooks/supabase';
-import { FetchDataDTo, PostDTO } from '@/type/PostTable/DashBoard';
+import { FetchDataDTo, PostCountByDateDTO, PostDTO } from '@/type/PostTable/DashBoard';
 
 export type PostCreateDTO = Omit<PostDTO, 'id' | 'created_at'>;
 
@@ -34,4 +34,28 @@ export const fetchPosts = async (page: number, pageSize: number): Promise<FetchD
 
   if (error) throw new Error(error.message);
   return { posts: data || [], total: count || 0 };
+};
+
+// 날짜별 데이터 불러오기
+export const fetchPostsGroupedByDate = async (): Promise<PostCountByDateDTO[]> => {
+  const { data, error } = await supabase.from('dashboard').select('created_at');
+
+  if (error) throw new Error(error.message);
+
+  // 클라이언트 측에서 데이터 그룹화 및 집계 수행
+  const groupedData: Record<string, number> = {};
+
+  data.forEach((item: { created_at: string }) => {
+    const date = item.created_at.split('T')[0];
+    if (groupedData[date]) {
+      groupedData[date]++;
+    } else {
+      groupedData[date] = 1;
+    }
+  });
+
+  return Object.keys(groupedData).map((date) => ({
+    date,
+    count: groupedData[date],
+  }));
 };
