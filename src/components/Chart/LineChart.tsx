@@ -85,11 +85,26 @@ const LineChart = ({ campaign }: Props) => {
       .attr('cy', (d) => yScale(d.count))
       .attr('r', 6)
       .attr('fill', '#f99');
+
+    const legend = svg
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', `translate(${width - PADDING - 100}, ${PADDING})`);
+
+    legend.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 6).style('fill', '#f99');
+
+    legend
+      .append('text')
+      .attr('x', 10)
+      .attr('y', 0)
+      .attr('dy', '.35em')
+      .style('text-anchor', 'start')
+      .text('게시물 등록수');
   }, [campaign, size]);
 
   return (
     <div ref={rootRef} className="w-full h-64">
-      <h2>날짜별 게시글 등록 수</h2>
+      <h2 className="font-bold">날짜별 게시글 등록 수</h2>
       <svg ref={svgRef} width={size.width} height={size.height}>
         <g className="x-axis" />
         <g className="y-axis" />

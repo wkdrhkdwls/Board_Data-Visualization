@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { axisBottom, axisLeft, range, scaleBand, scaleLinear, select } from 'd3';
+import { axisBottom, axisLeft, scaleBand, scaleLinear, select } from 'd3';
 import { useResize } from '@/hooks/useResize';
 
 interface TagData {
@@ -15,41 +15,21 @@ const BlockChart = ({ data }: Props) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const size = useResize(rootRef);
-  const PADDING = 30;
-
-  const groupDataByTag = (data: TagData[]) => {
-    const groupedData: Record<string, number> = {};
-
-    data.forEach((item) => {
-      if (groupedData[item.tag]) {
-        groupedData[item.tag] += item.count;
-      } else {
-        groupedData[item.tag] = item.count;
-      }
-    });
-
-    return Object.keys(groupedData).map((tag) => ({
-      tag,
-      count: groupedData[tag],
-    }));
-  };
+  const PADDING = 50;
 
   useEffect(() => {
     if (!size || !data.length) {
       return;
     }
-
-    const groupedData = groupDataByTag(data);
-
     const { width, height } = size;
 
     const svg = select(svgRef.current);
-    const maxCount = Math.max(...groupedData.map((d) => d.count));
+    const maxCount = Math.max(...data.map((d) => d.count));
 
     const xScale = scaleBand()
-      .domain(groupedData.map((d) => d.tag))
+      .domain(data.map((d) => `#${d.tag}`))
       .range([PADDING, width - PADDING])
-      .padding(0.1);
+      .padding(0.2);
 
     const yScale = scaleLinear()
       .domain([0, maxCount])
@@ -61,24 +41,39 @@ const BlockChart = ({ data }: Props) => {
       .style('transform', `translateY(${height - PADDING}px)`)
       .call(xAxis);
 
-    const yAxis = axisLeft(yScale).tickValues(range(0, Math.max(...yScale.domain()) + 1, 50));
+    const yAxis = axisLeft(yScale).ticks(7);
     svg.select<SVGGElement>('.y-axis').style('transform', `translateX(${PADDING}px)`).call(yAxis);
 
     svg
       .selectAll('.bar')
-      .data(groupedData)
+      .data(data)
       .join('rect')
       .attr('class', 'bar')
-      .attr('x', (d) => xScale(d.tag) ?? 0)
+      .attr('x', (d) => xScale(`#${d.tag}`) ?? 0)
       .attr('y', (d) => yScale(d.count))
       .attr('width', xScale.bandwidth())
       .attr('height', (d) => height - PADDING - yScale(d.count))
-      .attr('fill', '#f99'); // Color of the bars
+      .attr('fill', '#f99');
+
+    const legend = svg
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', `translate(${width - PADDING - 100}, ${PADDING})`);
+
+    legend.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 6).style('fill', '#f99');
+
+    legend
+      .append('text')
+      .attr('x', 10)
+      .attr('y', 0)
+      .attr('dy', '.35em')
+      .style('text-anchor', 'start')
+      .text('게시물 등록수');
   }, [data, size]);
 
   return (
-    <div ref={rootRef} className="w-full min-h-64">
-      <h2>해시태그별 게시물 등록 수</h2>
+    <div ref={rootRef} className="w-full h-64">
+      <h2 className="font-bold">해시태그별 게시글 등록 수</h2>
       <svg ref={svgRef} width={size.width} height={size.height}>
         <g className="x-axis" />
         <g className="y-axis" />

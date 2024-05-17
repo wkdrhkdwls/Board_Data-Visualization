@@ -36,10 +36,10 @@ const StackedBarChart = ({ data }: Props) => {
     const { width, height } = size;
 
     const svg = select(svgRef.current);
-    svg.selectAll('*').remove(); // Clear previous content
+    svg.selectAll('*').remove();
 
-    const keys = Object.keys(data[0]).slice(1); // Get the keys excluding the date
-    const colors = ['#f99', '#99f', '#9f9']; // Colors for each category
+    const keys = Object.keys(data[0]).slice(1);
+    const colors = ['#f99', '#99f', '#9f9'];
 
     const xScale = scaleBand()
       .domain(data.map((d) => d.date))
@@ -93,11 +93,35 @@ const StackedBarChart = ({ data }: Props) => {
       .attr('y', (d) => yScale(d[1]))
       .attr('height', (d) => yScale(d[0]) - yScale(d[1]))
       .attr('width', xScale.bandwidth());
+
+    // 범례 추가
+    const legend = svg
+      .selectAll('.legend')
+      .data(keys)
+      .enter()
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', (d, i) => `translate(${width - PADDING - 300 + i * 100}, ${PADDING / 2})`);
+
+    legend
+      .append('circle')
+      .attr('cx', 9)
+      .attr('cy', 9)
+      .attr('r', 9)
+      .style('fill', (d, i) => colors[i]);
+
+    legend
+      .append('text')
+      .attr('x', 24)
+      .attr('y', 9)
+      .attr('dy', '.35em')
+      .style('text-anchor', 'start')
+      .text((d) => d);
   }, [data, size]);
 
   return (
     <div ref={rootRef} className="w-full min-h-64">
-      <h2>게시판별 게시글 등록 수</h2>
+      <h2 className="font-bold">게시판별 게시글 등록 수</h2>
       <svg ref={svgRef} width={size.width} height={size.height}>
         <g className="x-axis" />
         <g className="y-axis" />
