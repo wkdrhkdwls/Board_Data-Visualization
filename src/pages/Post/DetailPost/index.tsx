@@ -3,7 +3,7 @@ import Layout from '@/components/layout/layout';
 import { useAuth } from '@/hooks/useAuth';
 import { deletePost, fetchPostById } from '@/services/DashBoard/dashBoardAPI';
 import usePostStore from '@/store/postStore';
-import DeleteModal from '@/utils/Modal';
+import DeleteModal from '@/utils/Modal/DeleteModal';
 import { getTimeDifference } from '@/utils/changeDateTime';
 import { LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';

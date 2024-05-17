@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuth } from '@/hooks/useAuth';
+import ConfirmModal from '@/utils/Modal/ConfirmModal';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ const Header = () => {
   // 모바일 메뉴 열기 여부 상태
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // 모달 열림 여부 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // 홈으로 이동
   const handleHome = () => {
     navigate('/');
@@ -19,6 +23,10 @@ const Header = () => {
   // 로그인으로 이동
   const handleLogin = () => {
     navigate('/login');
+  };
+  // 차트로 이동
+  const handleChart = () => {
+    navigate('/chart');
   };
 
   // 모바일 메뉴 토글
@@ -30,6 +38,26 @@ const Header = () => {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
+
+  // 모달 열기
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 320 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMobileMenuOpen]);
 
   return (
     <div className="w-full h-auto py-5 bg-white border-b border-gray-200">
@@ -53,7 +81,7 @@ const Header = () => {
             <Button onClick={handleHome} className="bg-white text-black text-lg mx-2">
               게시판
             </Button>
-            <Button onClick={() => {}} className="bg-white text-black text-lg mx-2">
+            <Button onClick={handleChart} className="bg-white text-black text-lg mx-2">
               대시보드
             </Button>
           </div>
@@ -92,13 +120,19 @@ const Header = () => {
               <Button onClick={handleHome} className=" bg-white text-black text-lg my-4">
                 게시판
               </Button>
-              <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">
+              <Button onClick={openModal} className=" bg-white text-black text-lg my-4">
                 대시보드(모바일 불가)
               </Button>
             </div>
           </div>
         </div>
       )}
+      <ConfirmModal
+        title="모바일에서 사용이 불가합니다."
+        content="대시보드는 모바일에서 사용이 불가하므로 PC환경에서 접속해주세요. 감사합니다."
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+      />
     </div>
   );
 };

@@ -7,3 +7,10 @@ export type DeleteModalDTO = {
   onDelete: () => void;
   commentId?: number;
 };
+
+export type ConfirmModalDTO = {
+  title: string;
+  content: string;
+  isOpen: boolean;
+  onRequestClose: () => void;
+};

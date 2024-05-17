@@ -5,7 +5,7 @@ import { formatDate } from '@/utils/changeDateTime';
 import { useEffect } from 'react';
 import CommentReplySection from '@/components/Reply/Comment_Reply';
 import usePostStore from '@/store/postStore';
-import DeleteModal from '@/utils/Modal';
+import DeleteModal from '@/utils/Modal/DeleteModal';
 import { useCommentActions } from '@/hooks/useComment';
 import { useForm } from 'react-hook-form';
 import { CommentFormDataDTO } from '@/type/Comment/comment';
