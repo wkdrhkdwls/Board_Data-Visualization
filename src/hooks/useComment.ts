@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import useCommentStore from '@/store/commentStore';
@@ -10,8 +10,9 @@ import {
   deleteCommentReplyById,
 } from '@/services/Comment/commentReplyAPI';
 import { CommentType } from '@/type/Comment/comment';
+import { useQuery } from '@tanstack/react-query';
 
-export const useCommentActions = (postId: number) => {
+export const useCommentActions = (postId: number, commentId?: number) => {
   const { nickname, accessToken, userId } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -28,18 +29,25 @@ export const useCommentActions = (postId: number) => {
     setSelectedReplyId(null);
   };
 
-  // 댓글, 대댓글 불러오기
-  const loadComments = async () => {
-    try {
-      const data: CommentType[] = await fetchComments(postId);
-      for (const comment of data) {
+  const { data, refetch } = useQuery({
+    queryKey: ['comments', postId],
+    queryFn: async () => {
+      const commentsData: CommentType[] = await fetchComments(postId);
+      for (const comment of commentsData) {
         comment.replies = await fetchCommentReplies(comment.id);
       }
+      return commentsData;
+    },
+    enabled: !!postId,
+    staleTime: 1000 * 60 * 5, // refresh 5분
+    gcTime: 10 * 60 * 1000, // 캐시 데이터 10분
+  });
+
+  useEffect(() => {
+    if (data) {
       setComments(data);
-    } catch (error: any) {
-      console.error('Error fetching comments:', error.message);
     }
-  };
+  }, [data, setComments]);
 
   // 댓글 작성
   const handleCommentSubmit = async (content: string) => {
@@ -56,7 +64,7 @@ export const useCommentActions = (postId: number) => {
       if (newComment) {
         addComment(newComment);
       }
-      loadComments();
+      refetch();
     } catch (error: any) {
       console.error('Error sending comment:', error.message);
     }
@@ -77,6 +85,7 @@ export const useCommentActions = (postId: number) => {
       if (newReply) {
         addReply(commentId, newReply);
       }
+      refetch();
     } catch (error: any) {
       console.error('Error sending reply:', error.message);
     }
@@ -89,6 +98,7 @@ export const useCommentActions = (postId: number) => {
         await deleteCommentById(selectedCommentId);
         deleteComment(selectedCommentId);
         setModalOpen(false);
+        refetch();
       } catch (error: any) {
         console.error('Error deleting comment:', error.message);
       }
@@ -101,6 +111,7 @@ export const useCommentActions = (postId: number) => {
       await deleteCommentReplyById(replyId);
       deleteReply(commentId, replyId);
       setModalOpen(false);
+      refetch();
 
       toast({
         title: '대댓글 삭제 성공',
@@ -137,7 +148,7 @@ export const useCommentActions = (postId: number) => {
     selectedReplyId,
     showOptions,
     replyVisibility,
-    loadComments,
+    loadComments: refetch,
     handleCommentSubmit,
     handleReplySubmit,
     handleDeleteComment,
