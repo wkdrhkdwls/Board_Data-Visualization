@@ -60,6 +60,14 @@ export const useCommentActions = (postId: number) => {
   };
 
   const handleReplySubmit = async (commentId: number, content: string) => {
+    if (!accessToken) {
+      toast({
+        title: '로그인이 필요합니다.',
+        duration: 3000,
+      });
+      navigate('/login');
+      return;
+    }
     try {
       const newReply = await sendCommentReply(nickname, content, commentId, userId!);
       if (newReply) {

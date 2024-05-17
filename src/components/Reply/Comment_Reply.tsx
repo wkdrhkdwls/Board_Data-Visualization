@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatDate } from '@/utils/changeDateTime';
 import { useAuth } from '@/hooks/useAuth';
-import DeleteModal from '@/utils/Modal';
+import DeleteModal from '@/utils/Modal/DeleteModal';
 import { EllipsisVertical, CornerDownRight } from 'lucide-react';
 import useCommentStore from '@/store/commentStore';
 import { useCommentActions } from '@/hooks/useComment';

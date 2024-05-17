@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { useState } from 'react';
 
 import { useAuth } from '@/hooks/useAuth';
+import ConfirmModal from '@/utils/Modal/ConfirmModal';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -11,6 +12,9 @@ const Header = () => {
   const { nickname } = useAuth();
   // 모바일 메뉴 열기 여부 상태
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // 모달 열림 여부 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 홈으로 이동
   const handleHome = () => {
@@ -33,6 +37,16 @@ const Header = () => {
   // 모바일 메뉴 닫기
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  // 모달 열기
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -96,13 +110,19 @@ const Header = () => {
               <Button onClick={handleHome} className=" bg-white text-black text-lg my-4">
                 게시판
               </Button>
-              <Button onClick={() => {}} className=" bg-white text-black text-lg my-4">
+              <Button onClick={openModal} className=" bg-white text-black text-lg my-4">
                 대시보드(모바일 불가)
               </Button>
             </div>
           </div>
         </div>
       )}
+      <ConfirmModal
+        title="모바일에서 사용이 불가합니다."
+        content="대시보드는 모바일에서 사용이 불가하므로 PC환경에서 접속해주세요. 감사합니다."
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+      />
     </div>
   );
 };
