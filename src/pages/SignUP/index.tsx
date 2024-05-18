@@ -60,7 +60,7 @@ const SignUpPage = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center p-4 my-28">
+      <div className="flex flex-col items-center justify-center p-4 my-[100px]">
         <h2 className="text-center text-[32px] font-extrabold my-4">회원가입</h2>
         <form
           onSubmit={handleSubmit(signupHandler)}

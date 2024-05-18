@@ -12,6 +12,7 @@ import SignUpCompletePage from '@/pages/SignUpComplete';
 import CreatePostPage from '@/pages/Post/CreatePost';
 import DetailPostPage from '@/pages/Post/DetailPost';
 import ChartPage from '@/pages/Chart';
+import ScrollToTop from '@/utils/ScrollToTop';
 
 const pageRoutes = {
   main: '/',
@@ -25,6 +26,7 @@ const pageRoutes = {
 
 const CommonLayout = () => (
   <RootErrorBoundary>
+    <ScrollToTop />
     <RootSuspense>
       <Outlet />
       <Toaster />

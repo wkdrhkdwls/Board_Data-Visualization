@@ -73,7 +73,7 @@ const DetailPostPage = () => {
           <div className="p-4 max-w-5xl mx-auto text-black my-10">
             <div className="flex flex-row font-extrabold justify-between">
               <div className="flex flex-row">
-                <button onClick={() => navigate(-1)} className="mb-2 mr-2">
+                <button onClick={() => navigate(-1)} className="mb-2 mr-4">
                   <LeftOutlined />
                 </button>
                 <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
