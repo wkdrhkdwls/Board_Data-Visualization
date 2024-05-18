@@ -47,7 +47,7 @@ const LoginPage = () => {
       console.error('로그인 에러 : ', error.message);
       toast({
         variant: 'destructive',
-        title: '로그인 실패',
+        title: '로그인에 실패했습니다.',
         description: error.message,
         duration: 2000,
         className: 'flex item-center justify-center',
@@ -67,7 +67,7 @@ const LoginPage = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center p-4 my-28">
+      <div className="flex flex-col items-center justify-center p-4 my-[100px]">
         <h2 className="text-center text-[32px] font-extrabold my-4">로그인</h2>
         <form
           onSubmit={handleSubmit(loginHandler)}

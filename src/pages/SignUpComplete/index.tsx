@@ -13,7 +13,7 @@ const SignUpCompletePage = () => {
   };
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center p-4 my-28 gap-2">
+      <div className="flex flex-col items-center justify-center p-4 my-[100px] gap-2">
         <img src={CheckIcon} alt="회원가입 완료" className="w-10 h-10 mx-auto " />
         <p className="flex-grow-0 flex-shrink-0 text-2xl font-bold text-left text-[#040404]">
           회원가입이 완료되었습니다.
