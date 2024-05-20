@@ -1,4 +1,3 @@
-import LineChart from '@/components/Chart/LineChart';
 import BlockChart from '@/components/Chart/BlockChart';
 import StackedBarChart from '@/components/Chart/StackChart';
 import { fetchPosts, fetchPostsGroupedByDate } from '@/services/DashBoard/dashBoardAPI';
@@ -10,25 +9,27 @@ import { DatePickerWithRange } from '@/components/ui/dateRangePicker';
 import { useQuery } from '@tanstack/react-query';
 import { transformData } from '@/utils/transformData';
 import { PostStackChartDTO } from '@/type/Chart/Chart';
+import DatePostsLineChart from '@/components/Chart/LineChart';
 
 const ChartPage: React.FC = () => {
   const { nickname } = useAuth();
   const navigate = useNavigate();
 
+  // 날짜별 게시물 수 데이터 쿼리
   const { data: lineData } = useQuery({
     queryKey: ['postsGroupedByDate'],
     queryFn: fetchPostsGroupedByDate,
     staleTime: 1000 * 60 * 5,
   });
 
+  // 모든 게시물 데이터 쿼리
   const { data: allPostsData } = useQuery({
     queryKey: ['allPosts', 1, 100],
     queryFn: () => fetchPosts(1, 100),
     staleTime: 1000 * 60 * 5,
   });
 
-  console.log('allPostsData', allPostsData);
-
+  // 게시물 데이터를 태그별로 그룹화
   const { data: stackedData } = useQuery({
     queryKey: ['stackedData', allPostsData],
     queryFn: () => {
@@ -43,8 +44,10 @@ const ChartPage: React.FC = () => {
     staleTime: 1000 * 60 * 5,
   });
 
+  // 태그별로 그룹화된 데이터를 차트에 맞게 변환
   const blockData = allPostsData ? groupDataByTag(allPostsData.posts) : [];
 
+  // 홈으로 이동
   const handleHome = () => {
     navigate('/');
   };
@@ -91,7 +94,7 @@ const ChartPage: React.FC = () => {
         </div>
 
         <div className="p-4  grid grid-cols-2 gap-4 tablet:flex tablet:flex-col">
-          <LineChart campaign={lineData || []} />
+          <DatePostsLineChart dateData={lineData || []} />
           <BlockChart data={blockData} />
           <StackedBarChart data={stackedData || []} />
         </div>

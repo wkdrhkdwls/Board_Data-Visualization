@@ -13,29 +13,23 @@ import {
   timeFormat,
 } from 'd3';
 import { useResize } from '@/hooks/useResize';
+import { LineChartDTO } from '@/type/Chart/Chart';
 
-interface Props {
-  campaign: {
-    date: string;
-    count: number;
-  }[];
-}
-
-const LineChart = ({ campaign }: Props) => {
+const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const size = useResize(rootRef);
   const PADDING = 50;
 
   useEffect(() => {
-    if (!size || !campaign.length) {
+    if (!size || !dateData.length) {
       return;
     }
     const { width, height } = size;
 
     const svg = select(svgRef.current);
     const parseDate = timeParse('%Y-%m-%d');
-    const data = campaign.map((d) => ({ date: parseDate(d.date) as Date, count: d.count }));
+    const data = dateData.map((d) => ({ date: parseDate(d.date) as Date, count: d.count }));
 
     // scaleTime에는 패딩을 못줘서 따로 계산
     const xDomain = extent(data, (d) => d.date) as [Date, Date];
@@ -100,7 +94,7 @@ const LineChart = ({ campaign }: Props) => {
       .attr('dy', '.35em')
       .style('text-anchor', 'start')
       .text('게시물 등록수');
-  }, [campaign, size]);
+  }, [dateData, size]);
 
   return (
     <div ref={rootRef} className="w-full min-h-64 border border-[#eee] p-4">
@@ -113,4 +107,4 @@ const LineChart = ({ campaign }: Props) => {
   );
 };
 
-export default LineChart;
+export default DatePostsLineChart;

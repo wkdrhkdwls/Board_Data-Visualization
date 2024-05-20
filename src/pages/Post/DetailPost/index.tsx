@@ -12,21 +12,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { EllipsisVertical } from 'lucide-react';
 
 const DetailPostPage = () => {
+  // 게시물의 id를 빼온다.
   const { id } = useParams();
   const navigate = useNavigate();
   const { userId } = useAuth();
   // 게시물 수정, 삭제 옵션
-  const [showOptions, setShowOptions] = useState(false);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
 
   // 모달 옵션
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
   // zustand로 data와 postId 전역관리
   const { post, setPost, postId, setPostId, clearPost } = usePostStore();
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
-  // main.tsx에서 loading을 하므로 굳이 여기서 할 필요는 없다.
   const { data } = useQuery({
     queryKey: ['dashboard', postId],
     queryFn: () => fetchPostById(postId!),
@@ -84,11 +84,11 @@ const DetailPostPage = () => {
                     <EllipsisVertical />
                   </button>
                   {showOptions && (
-                    <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
-                      <li className="p-2 cursor-pointer">수정</li>
-                      <li className="p-2 cursor-pointer" onClick={openModal}>
+                    <ul className="absolute flex flex-col text-left right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
+                      <button className="p-2 cursor-pointer">수정</button>
+                      <button className="p-2 cursor-pointer" onClick={openModal}>
                         삭제
-                      </li>
+                      </button>
                     </ul>
                   )}
                 </div>

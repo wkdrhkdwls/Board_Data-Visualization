@@ -1,17 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { axisBottom, axisLeft, scaleBand, scaleLinear, select } from 'd3';
 import { useResize } from '@/hooks/useResize';
+import { BlockChartDTO } from '@/type/Chart/Chart';
 
-interface TagData {
-  tag: string;
-  count: number;
-}
-
-interface Props {
-  data: TagData[];
-}
-
-const BlockChart = ({ data }: Props) => {
+const TagPostsBlockChart = ({ data }: BlockChartDTO) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const size = useResize(rootRef);
@@ -82,4 +74,4 @@ const BlockChart = ({ data }: Props) => {
   );
 };
 
-export default BlockChart;
+export default TagPostsBlockChart;
