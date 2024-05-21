@@ -1,4 +1,4 @@
-import BlockChart from '@/components/Chart/BlockChart';
+import BlockChart from '@/components/Chart/TagPostChart';
 import StackedBarChart from '@/components/Chart/StackChart';
 import { fetchPosts, fetchPostsGroupedByDate } from '@/services/DashBoard/dashBoardAPI';
 import { groupDataByTag } from '@/utils/GroupByTag';
@@ -9,7 +9,7 @@ import { DatePickerWithRange } from '@/components/ui/dateRangePicker';
 import { useQuery } from '@tanstack/react-query';
 import { transformData } from '@/utils/transformData';
 import { PostStackChartDTO } from '@/type/Chart/Chart';
-import DatePostsLineChart from '@/components/Chart/LineChart';
+import DatePostsLineChart from '@/components/Chart/DatePostChart';
 
 const ChartPage: React.FC = () => {
   const { nickname } = useAuth();

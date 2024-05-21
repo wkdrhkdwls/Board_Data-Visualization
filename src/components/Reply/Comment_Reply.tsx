@@ -12,13 +12,20 @@ import { useForm } from 'react-hook-form';
 import { ReplyFormDataDTO } from '@/type/Comment/comment_reply';
 import usePostStore from '@/store/postStore';
 
+// 대댓글 작성 및 삭제 컴포넌트
 const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
+  // 현재 로그인한 사용자의 ID 가져오기
   const { userId } = useAuth();
+  // 댓글 상태 가져오기
   const { comments } = useCommentStore();
+
+  // 게시글 ID 가져오기
   const { postId } = usePostStore();
 
+  // 옵션 표시 상태를 관리
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
 
+  // useForm 훅을 사용하여 폼 상태를 관리
   const {
     register,
     handleSubmit,
@@ -26,6 +33,7 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
     formState: { errors },
   } = useForm<ReplyFormDataDTO>();
 
+  // 댓글 관련 함수들 가져오기
   const {
     handleReplySubmit,
     handleDeleteReply,
@@ -36,12 +44,16 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
     setSelectedReplyId,
   } = useCommentActions(postId!);
 
+  // 주어진 commentId에 해당하는 댓글 가져오기
   const comment = comments.find((c) => c.id === commentId);
+
+  // 대댓글 삭제 모달 열기
   const openDeleteModal = (replyId: number) => {
     setSelectedReplyId(replyId);
     setModalOpen(true);
   };
 
+  // 대댓글 작성 요청
   const onSubmit = async (data: { replyContent: string }) => {
     await handleReplySubmit(commentId, data.replyContent);
     reset();

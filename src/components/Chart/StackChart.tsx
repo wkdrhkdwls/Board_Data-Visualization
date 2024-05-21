@@ -14,29 +14,40 @@ import { useResize } from '@/hooks/useResize';
 import { StackProps, StackedDataDTO } from '@/type/Chart/Chart';
 
 const StackedBarChart = ({ data }: StackProps) => {
+  // svg 엘리먼트와 root 엘리먼트의 ref
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  // 창 크기 변경 감지 후 차트 그리기
   const size = useResize(rootRef);
+
+  // 차트의 패딩
   const PADDING = 30;
 
   useEffect(() => {
+    // 창 크기가 없거나 데이터가 없으면 그리지 않음
     if (!size || !data.length) {
       return;
     }
+    // 차트의 너비와 높이
     const { width, height } = size;
 
+    // svg 엘리먼트 선택
     const svg = select(svgRef.current);
+    // svg 초기화
     svg.selectAll('*').remove();
 
     // 데이터의 키값 설정
     const keys = ['자유게시판', '질문게시판', '기타게시판'];
     const colors = ['#f99', '#99f', '#9f9'];
 
+    // x 스케일 정의
     const xScale = scaleBand()
       .domain(data.map((d) => d.date))
       .range([PADDING, width - PADDING])
       .padding(0.1);
 
+    // y 스케일 정의
     const yScale = scaleLinear()
       .domain([
         0,
@@ -48,6 +59,7 @@ const StackedBarChart = ({ data }: StackProps) => {
       ])
       .range([height - PADDING, PADDING]);
 
+    // x축 생성
     const xAxis = axisBottom(xScale).tickFormat((d) => (typeof d === 'string' ? d.slice(5) : ''));
     svg
       .append('g')
@@ -55,6 +67,7 @@ const StackedBarChart = ({ data }: StackProps) => {
       .attr('transform', `translate(0,${height - PADDING})`)
       .call(xAxis);
 
+    // y축 생성
     const yAxis = axisLeft(yScale).tickValues(range(0, Math.max(...yScale.domain()) + 1, 50));
     svg
       .append('g')
@@ -62,11 +75,13 @@ const StackedBarChart = ({ data }: StackProps) => {
       .attr('transform', `translate(${PADDING},0)`)
       .call(yAxis);
 
+    // 데이터 스택
     const stackedData = stack<StackedDataDTO>()
       .keys(keys)
       .order(stackOrderNone)
       .offset(stackOffsetNone)(data);
 
+    // 레이어 생성
     svg
       .selectAll('.layer')
       .data(stackedData)
