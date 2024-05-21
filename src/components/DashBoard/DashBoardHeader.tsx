@@ -14,6 +14,7 @@ const DashBoardHeader = () => {
     sessionStorage.setItem('selectedBoard', selected);
   }, [selected]);
 
+  // 게시물이 많지 않아 게시판 Type마다 분할하지 않고 하나의 페이지로 구성
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <div className="mb-4">

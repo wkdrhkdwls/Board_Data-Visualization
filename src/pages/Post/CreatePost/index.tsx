@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/use-toast';
 import { createPost } from '@/services/DashBoard/dashBoardAPI';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CreatePostPage = () => {
   // useForm 훅을 사용하여 폼 상태를 관리
@@ -19,6 +20,7 @@ const CreatePostPage = () => {
 
   const { toast } = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   // 더미데이터로 랜덤 조회수 생성
   const randomViews = Math.floor(Math.random() * 100) + 1;
 
@@ -54,6 +56,9 @@ const CreatePostPage = () => {
     try {
       const data = await createPost(postData);
       console.log('Post created successfully:', data);
+
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+
       setTimeout(() => {
         toast({
           title: '게시물 등록 성공',

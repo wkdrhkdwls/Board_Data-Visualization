@@ -2,6 +2,7 @@ import { useCookies } from 'react-cookie';
 import { supabase } from '@/hooks/supabase';
 import { useQuery } from '@tanstack/react-query';
 
+// 사용자 정보를 가져오는 훅
 export const useAuth = () => {
   const [cookies] = useCookies(['access_token']);
 

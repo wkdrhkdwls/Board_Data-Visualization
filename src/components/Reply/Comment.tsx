@@ -11,23 +11,31 @@ import { useForm } from 'react-hook-form';
 import { CommentFormDataDTO } from '@/type/Comment/comment';
 import { EllipsisVertical } from 'lucide-react';
 
+// 댓글 컴포넌트
 const CommentSection = () => {
+  // 게시물 ID 가져오기
   const { postId } = usePostStore();
+
+  // 현재 로그인한 사용자의 ID 가져오기
   const { userId } = useAuth();
+
+  // 댓글관련 함수 가져오기
   const {
-    comments,
-    isModalOpen,
-    closeModal,
-    setModalOpen,
-    setSelectedCommentId,
-    showOptions,
-    replyVisibility,
-    loadComments,
-    handleCommentSubmit,
-    handleDeleteComment,
-    toggleReplyInput,
-    toggleOptions,
+    comments, // 댓글 목록
+    isModalOpen, // 모달이 열려 있는지 여부
+    closeModal, // 모달 닫기 함수
+    setModalOpen, // 모달 열기 함수
+    setSelectedCommentId, // 선택된 댓글 ID 설정 함수
+    showOptions, // 옵션 표시 여부 상태
+    replyVisibility, // 답글 입력창 표시 여부 상태
+    loadComments, // 댓글 불러오기 함수
+    handleCommentSubmit, // 댓글 제출 함수
+    handleDeleteComment, // 댓글 삭제 함수
+    toggleReplyInput, // 답글 입력창 토글 함수
+    toggleOptions, // 옵션 토글 함수
   } = useCommentActions(postId!);
+
+  // useForm 훅을 사용하여 폼 상태를 관리
   const {
     register,
     handleSubmit,
@@ -35,16 +43,19 @@ const CommentSection = () => {
     formState: { errors },
   } = useForm<CommentFormDataDTO>();
 
+  // 댓글 작성
   const onSubmit = async (data: { content: string }) => {
     await handleCommentSubmit(data.content);
     reset();
   };
 
+  // 삭제 모달 열기
   const openDeleteModal = (commentId: number) => {
     setSelectedCommentId(commentId);
     setModalOpen(true);
   };
 
+  // 컴포넌트가 마운트되면 댓글 불러오기
   useEffect(() => {
     loadComments();
   }, [postId, loadComments]);

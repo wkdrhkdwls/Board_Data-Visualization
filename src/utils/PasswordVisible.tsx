@@ -1,6 +1,7 @@
 import { TogglePasswordVisibilityDTO } from '@/type/Utils/passwordVisible';
 import { EyeFilled, EyeInvisibleOutlined } from '@ant-design/icons';
 
+// 비밀번호 보이기/숨기기 버튼
 const TogglePasswordVisibleButton = ({ isVisible, onToggle }: TogglePasswordVisibilityDTO) => {
   return (
     <button

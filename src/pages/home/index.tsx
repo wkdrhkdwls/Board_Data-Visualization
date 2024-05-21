@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/pageStore';
-import { fetchPosts } from '@/services/DashBoard/dashBoardAPI';
+import { getPosts } from '@/services/DashBoard/dashBoardAPI';
 
 const pageSize = 10;
 
@@ -23,7 +23,7 @@ function Home() {
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard', currentPage],
-    queryFn: () => fetchPosts(currentPage, pageSize),
+    queryFn: () => getPosts(currentPage, pageSize),
     placeholderData: (previousData) => previousData, //이전 데이터 유지
     staleTime: 1000 * 60 * 5, // refresh 5분
     gcTime: 10 * 60 * 1000, //캐시 테이터 10분

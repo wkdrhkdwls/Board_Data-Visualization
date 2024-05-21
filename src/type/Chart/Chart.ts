@@ -1,3 +1,20 @@
+// 날짜별 게시글 수 데이터 타입
+export type LineChartDTO = {
+  dateData: {
+    date: string;
+    count: number;
+  }[];
+};
+
+// 해시태그별 게시글 수 데이터 타입
+interface TagCountData {
+  tag: string;
+  count: number;
+}
+
+export interface BlockChartDTO {
+  data: TagCountData[];
+}
 // 보여줄 데이터 타입
 export type PostStackChartDTO = {
   created_at: Date;
