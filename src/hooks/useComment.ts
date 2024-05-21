@@ -12,23 +12,32 @@ import {
 import { CommentType } from '@/type/Comment/comment';
 import { useQuery } from '@tanstack/react-query';
 
+// 댓글 관련 훅
 export const useCommentActions = (postId: number) => {
+  // 현재 로그인한 사용자 정보 가져오기
   const { nickname, accessToken, userId } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // 댓글 상태와 액션을 zusCommentStore에서 가져오기
   const { comments, setComments, addComment, deleteComment, addReply, deleteReply } =
     useCommentStore();
+  // 모달 상태와 선택된 댓글, 대댓글의 ID 상태
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
   const [selectedReplyId, setSelectedReplyId] = useState<number | null>(null);
+
+  // 대댓글 입력창 표시 상태와 대댓글 옵션 표시 상태
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
   const [replyVisibility, setReplyVisibility] = useState<Record<number, boolean>>({});
 
+  // 모달 닫기
   const closeModal = () => {
     setModalOpen(false);
     setSelectedReplyId(null);
   };
 
+  // 댓글, 대댓글 데이터를 가져오기 위한 쿼리 설정
   const { data, refetch } = useQuery({
     queryKey: ['comments', postId],
     queryFn: async () => {
@@ -43,6 +52,7 @@ export const useCommentActions = (postId: number) => {
     gcTime: 10 * 60 * 1000, // 캐시 데이터 10분
   });
 
+  // 댓글 데이터가 변경될 때 상태를 업데이트
   useEffect(() => {
     if (data) {
       setComments(data);
