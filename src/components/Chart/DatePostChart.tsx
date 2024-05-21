@@ -31,6 +31,7 @@ const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
     if (!size || !dateData.length) {
       return;
     }
+
     // 차트의 너비와 높이
     const { width, height } = size;
 
@@ -41,8 +42,22 @@ const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
     const parseDate = timeParse('%Y-%m-%d');
     const data = dateData.map((d) => ({ date: parseDate(d.date) as Date, count: d.count }));
 
+    // 전체 날짜 범위를 계산
+    const [minDate, maxDate] = extent(data, (d) => d.date) as [Date, Date];
+
+    // 모든 날짜를 포함한 새로운 데이터 생성
+    const fullData = [];
+    for (let dt = new Date(minDate); dt <= maxDate; dt.setDate(dt.getDate() + 1)) {
+      const currentDate = new Date(dt);
+      const currentDateString = currentDate.toISOString().split('T')[0];
+      const existingData = data.find(
+        (d) => d.date.toISOString().split('T')[0] === currentDateString,
+      );
+      fullData.push(existingData || { date: new Date(currentDate), count: 0 });
+    }
+
     // scaleTime에는 패딩을 못줘서 따로 계산
-    const xDomain = extent(data, (d) => d.date) as [Date, Date];
+    const xDomain = extent(fullData, (d) => d.date) as [Date, Date];
     const xDomainPadded = [
       new Date(xDomain[0].getTime() - (xDomain[1].getTime() - xDomain[0].getTime()) * 0.05),
       new Date(xDomain[1].getTime() + (xDomain[1].getTime() - xDomain[0].getTime()) * 0.05),
@@ -55,7 +70,7 @@ const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
 
     // y 스케일 정의
     const yScale = scaleLinear()
-      .domain([0, max(data, (d) => d.count) as number])
+      .domain([0, max(fullData, (d) => d.count) as number])
       .range([height - PADDING, PADDING]);
 
     // x축 생성
@@ -73,12 +88,12 @@ const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
     const lineGenerator = line<{ date: Date; count: number }>()
       .x((d) => xScale(d.date))
       .y((d) => yScale(d.count))
-      .curve(curveLinear);
+      .curve(curveLinear); // 직선으로 연결
 
     // 라인 그리기
     svg
       .selectAll('.line')
-      .data([data])
+      .data([fullData])
       .join('path')
       .attr('class', 'line')
       .attr('d', lineGenerator)
@@ -89,7 +104,7 @@ const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
     // 라인 위에 점 그리기
     svg
       .selectAll('.dot')
-      .data(data)
+      .data(fullData)
       .join('circle')
       .attr('class', 'dot')
       .attr('cx', (d) => xScale(d.date))
