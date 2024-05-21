@@ -1,7 +1,7 @@
 import CommentSection from '@/components/Reply/Comment';
 import Layout from '@/components/layout/layout';
 import { useAuth } from '@/hooks/useAuth';
-import { deletePost, fetchPostById } from '@/services/DashBoard/dashBoardAPI';
+import { removePost, getPostById } from '@/services/DashBoard/dashBoardAPI';
 import usePostStore from '@/store/postStore';
 import DeleteModal from '@/utils/Modal/DeleteModal';
 import { getTimeDifference } from '@/utils/changeDateTime';
@@ -29,7 +29,7 @@ const DetailPostPage = () => {
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   const { data } = useQuery({
     queryKey: ['dashboard', postId],
-    queryFn: () => fetchPostById(postId!),
+    queryFn: () => getPostById(postId!),
     placeholderData: (previousData) => previousData, //이전 데이터 유지
     staleTime: 1000 * 60 * 5, // refresh 5분
     gcTime: 10 * 60 * 1000, //캐시 테이터 10분
@@ -44,7 +44,7 @@ const DetailPostPage = () => {
   // 게시물 삭제
   const handleDeletePost = async () => {
     try {
-      await deletePost(postId!);
+      await removePost(postId!);
       navigate('/');
     } catch (error: any) {
       console.error('Error deleting post:', error.message);

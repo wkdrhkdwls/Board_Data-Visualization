@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import useCommentStore from '@/store/commentStore';
 import { useAuth } from '@/hooks/useAuth';
-import { sendComment, deleteCommentById, fetchComments } from '@/services/Comment/commentAPI';
+import { sendComment, getComments, removeCommentById } from '@/services/Comment/commentAPI';
 import {
   sendCommentReply,
-  fetchCommentReplies,
-  deleteCommentReplyById,
+  getCommentReplies,
+  removeCommentReplyById,
 } from '@/services/Comment/commentReplyAPI';
 import { CommentType } from '@/type/Comment/comment';
 import { useQuery } from '@tanstack/react-query';
@@ -41,9 +41,9 @@ export const useCommentActions = (postId: number) => {
   const { data, refetch } = useQuery({
     queryKey: ['comments', postId],
     queryFn: async () => {
-      const commentsData: CommentType[] = await fetchComments(postId);
+      const commentsData: CommentType[] = await getComments(postId);
       for (const comment of commentsData) {
-        comment.replies = await fetchCommentReplies(comment.id);
+        comment.replies = await getCommentReplies(comment.id);
       }
       return commentsData;
     },
@@ -105,7 +105,7 @@ export const useCommentActions = (postId: number) => {
   const handleDeleteComment = async () => {
     if (selectedCommentId !== null) {
       try {
-        await deleteCommentById(selectedCommentId);
+        await removeCommentById(selectedCommentId);
         deleteComment(selectedCommentId);
         setModalOpen(false);
         refetch();
@@ -118,7 +118,7 @@ export const useCommentActions = (postId: number) => {
   // 대댓글 삭제
   const handleDeleteReply = async (commentId: number, replyId: number) => {
     try {
-      await deleteCommentReplyById(replyId);
+      await removeCommentReplyById(replyId);
       deleteReply(commentId, replyId);
       setModalOpen(false);
       refetch();

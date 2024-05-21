@@ -1,6 +1,7 @@
 import { supabase } from '@/hooks/supabase';
 
-export const fetchCommentReplies = async (commentId: number) => {
+// 대댓글 가져오기
+export const getCommentReplies = async (commentId: number) => {
   const { data, error } = await supabase
     .from('comment_reply')
     .select('*')
@@ -12,6 +13,7 @@ export const fetchCommentReplies = async (commentId: number) => {
   return data;
 };
 
+// 대댓글 추가
 export const sendCommentReply = async (
   nickname: string,
   content: string,
@@ -28,7 +30,8 @@ export const sendCommentReply = async (
   return data;
 };
 
-export const deleteCommentReplyById = async (replyId: number): Promise<void> => {
+// 대댓글 삭제
+export const removeCommentReplyById = async (replyId: number): Promise<void> => {
   const { error } = await supabase.from('comment_reply').delete().match({ id: replyId });
   if (error) {
     throw new Error(error.message);

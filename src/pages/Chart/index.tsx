@@ -1,6 +1,6 @@
 import BlockChart from '@/components/Chart/TagPostChart';
 import StackedBarChart from '@/components/Chart/StackChart';
-import { fetchPosts, fetchPostsGroupedByDate } from '@/services/DashBoard/dashBoardAPI';
+import { getPosts, getPostsGroupedByDate } from '@/services/DashBoard/dashBoardAPI';
 import { groupDataByTag } from '@/utils/GroupByTag';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -18,14 +18,14 @@ const ChartPage: React.FC = () => {
   // 날짜별 게시물 수 데이터 쿼리
   const { data: lineData } = useQuery({
     queryKey: ['postsGroupedByDate'],
-    queryFn: fetchPostsGroupedByDate,
+    queryFn: getPostsGroupedByDate,
     staleTime: 1000 * 60 * 5,
   });
 
   // 모든 게시물 데이터 쿼리
   const { data: allPostsData } = useQuery({
     queryKey: ['allPosts', 1, 100],
-    queryFn: () => fetchPosts(1, 100),
+    queryFn: () => getPosts(1, 100),
     staleTime: 1000 * 60 * 5,
   });
 
