@@ -21,9 +21,16 @@
 
 ## 프로젝트 설명
 
-위어드섹터에서 제공한 피그마 및 기능 요청사항에 따른 게시판 CRUD와 D3.js를 사용한 데이터 시각화 그래프를 그리는 프로젝트입니다.
+위어드섹터에서 제공한 피그마 및 기능 요청사항에 따른 게시판 CRUD와 D3.js를 사용한 데이터 시각화 그래프를 그리는 프로젝트입니다. DataBase는 Supabase를 사용하여 구현하였습니다.
+![ERD](./assets/ERD.png)
 
 ## 결과물
+
+![1](./assets/ReadMe/1.gif)
+![2](./assets/ReadMe/2.gif)
+![3](./assets/ReadMe/3.gif)
+![4](./assets/ReadMe/4.gif)
+![5](./assets/ReadMe/5.gif)
 
 ### 주요 기능
 
