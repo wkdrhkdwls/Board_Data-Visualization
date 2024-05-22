@@ -22,7 +22,8 @@
 ## 프로젝트 설명
 
 위어드섹터에서 제공한 피그마 및 기능 요청사항에 따른 게시판 CRUD와 D3.js를 사용한 데이터 시각화 그래프를 그리는 프로젝트입니다. DataBase는 Supabase를 사용하여 구현하였습니다.
-![ERD](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/6be4e8bd-e391-4135-a717-4f7b5c07dfdd)
+![위어드섹터](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/9a521168-0d06-4b0e-ac52-b35d169f0b1e)
+
 
 
 ## 결과물
