@@ -14,15 +14,10 @@ export const getCommentReplies = async (commentId: number) => {
 };
 
 // 대댓글 추가
-export const sendCommentReply = async (
-  nickname: string,
-  content: string,
-  commentId: number,
-  userId: string,
-) => {
+export const sendCommentReply = async (nickname: string, content: string, commentId: number) => {
   const { data, error } = await supabase
     .from('comment_reply')
-    .insert([{ nickname, content, comment_id: commentId, user_id: userId }]);
+    .insert([{ nickname, content, comment_id: commentId }]);
 
   if (error) {
     throw new Error(error.message);

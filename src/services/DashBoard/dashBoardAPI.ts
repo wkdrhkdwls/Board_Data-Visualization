@@ -1,7 +1,7 @@
 import { supabase } from '@/hooks/supabase';
 import { FetchDataDTo, PostCountByDateDTO, PostDTO } from '@/type/PostTable/DashBoard';
 
-export type PostCreateDTO = Omit<PostDTO, 'id' | 'created_at'>;
+export type PostCreateDTO = Omit<PostDTO, 'id' | 'created_at' | 'user_id'>;
 
 // 특정 ID의 게시물을 불러오는 함수
 export const getPostById = async (postId: number): Promise<PostDTO> => {

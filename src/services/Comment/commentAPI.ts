@@ -1,15 +1,10 @@
 import { supabase } from '@/hooks/supabase';
 
 // 댓글을 추가하는 함수
-export const sendComment = async (
-  nickname: string,
-  content: string,
-  dashboardId: number,
-  userId: string,
-) => {
+export const sendComment = async (nickname: string, content: string, dashboardId: number) => {
   const { data, error } = await supabase
     .from('comment')
-    .insert([{ nickname, content, dashboard_id: dashboardId, user_id: userId }]);
+    .insert([{ nickname, content, dashboard_id: dashboardId }]);
 
   if (error) {
     throw new Error(error.message);
