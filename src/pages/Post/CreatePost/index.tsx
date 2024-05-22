@@ -14,7 +14,7 @@ const CreatePostPage = () => {
   // useForm 훅을 사용하여 폼 상태를 관리
   const { register, handleSubmit, setValue } = useForm();
   // useAuth 훅을 사용하여 사용자 정보를 가져옴
-  const { nickname, userId } = useAuth();
+  const { nickname } = useAuth();
   // 파일 이름을 표시하기 위한 상태
   const [fileLabel, setFileLabel] = useState('');
 
@@ -48,7 +48,7 @@ const CreatePostPage = () => {
       author: nickname || '',
       hashtags: hashtags.split(',').map((tag: any) => tag.trim()),
       views: randomViews,
-      user_id: userId || '',
+
       boardType: BoardType || '',
     };
 

@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 // 댓글 관련 훅
 export const useCommentActions = (postId: number) => {
   // 현재 로그인한 사용자 정보 가져오기
-  const { nickname, accessToken, userId } = useAuth();
+  const { nickname, accessToken } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -70,7 +70,7 @@ export const useCommentActions = (postId: number) => {
       return;
     }
     try {
-      const newComment = await sendComment(nickname, content, postId, userId!);
+      const newComment = await sendComment(nickname, content, postId);
       if (newComment) {
         addComment(newComment);
       }
@@ -91,7 +91,7 @@ export const useCommentActions = (postId: number) => {
       return;
     }
     try {
-      const newReply = await sendCommentReply(nickname, content, commentId, userId!);
+      const newReply = await sendCommentReply(nickname, content, commentId);
       if (newReply) {
         addReply(commentId, newReply);
       }
