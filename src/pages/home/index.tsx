@@ -1,5 +1,5 @@
 import Layout from '@/components/layout/layout';
-import { DashBoardTable } from '@/utils/DashBoardTable';
+
 import { useQuery } from '@tanstack/react-query';
 import DashBoardHeader from '@/components/DashBoard/DashBoardHeader';
 import { Button } from '@/components/ui/button';
@@ -8,10 +8,11 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/pageStore';
 import { getPosts } from '@/services/DashBoard/dashBoardAPI';
+import DashBoardTable from '@/utils/DashBoardTable';
 
 const pageSize = 10;
 
-function Home() {
+const Home = () => {
   // 현재 페이지 상태관리
   const { currentPage, setCurrentPage } = usePageStore();
   const { accessToken } = useAuth();
@@ -78,6 +79,6 @@ function Home() {
       </div>
     </Layout>
   );
-}
+};
 
 export default Home;

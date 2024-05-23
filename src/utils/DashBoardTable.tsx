@@ -17,7 +17,7 @@ import {
 import { DashBoardTableDTO } from '@/type/PostTable/DashBoard';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function DashBoardTable({
+const DashBoardTable = ({
   posts,
   totalPages,
   currentPage,
@@ -26,7 +26,7 @@ export function DashBoardTable({
   setCurrentPage,
   goPostDetail,
   isLoading,
-}: DashBoardTableDTO) {
+}: DashBoardTableDTO) => {
   // 밑에 있는 posts를 id를 기준으로 내림차순 정렬
   const sortedPosts = [...posts].sort((a, b) => b.id - a.id);
   return (
@@ -96,4 +96,6 @@ export function DashBoardTable({
       )}
     </>
   );
-}
+};
+
+export default DashBoardTable;
