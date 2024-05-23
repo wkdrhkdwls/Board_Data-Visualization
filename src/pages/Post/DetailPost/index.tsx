@@ -20,9 +20,9 @@ const DetailPostPage = () => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
 
   // 모달 옵션
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   // zustand로 data와 postId 전역관리
   const { post, setPost, postId, setPostId, clearPost } = usePostStore();
 
@@ -126,7 +126,7 @@ const DetailPostPage = () => {
           title="게시글 삭제"
           content="해당 게시글을 삭제하시겠습니까?"
           modalOpen={isModalOpen}
-          setModalOpen={setModalOpen}
+          setModalOpen={setIsModalOpen}
           onClose={closeModal}
           onDelete={handleDeletePost}
         />

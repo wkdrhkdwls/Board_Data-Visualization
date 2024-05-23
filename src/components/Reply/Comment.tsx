@@ -24,7 +24,7 @@ const CommentSection = () => {
     comments, // 댓글 목록
     isModalOpen, // 모달이 열려 있는지 여부
     closeModal, // 모달 닫기 함수
-    setModalOpen, // 모달 열기 함수
+    setIsModalOpen, // 모달 열기 함수
     setSelectedCommentId, // 선택된 댓글 ID 설정 함수
     showOptions, // 옵션 표시 여부 상태
     replyVisibility, // 답글 입력창 표시 여부 상태
@@ -52,7 +52,7 @@ const CommentSection = () => {
   // 삭제 모달 열기
   const openDeleteModal = (commentId: number) => {
     setSelectedCommentId(commentId);
-    setModalOpen(true);
+    setIsModalOpen(true);
   };
 
   // 컴포넌트가 마운트되면 댓글 불러오기
@@ -113,7 +113,7 @@ const CommentSection = () => {
         title="댓글삭제"
         content="해당 댓글을 삭제하시겠습니까?"
         modalOpen={isModalOpen}
-        setModalOpen={setModalOpen}
+        setModalOpen={setIsModalOpen}
         onClose={closeModal}
         onDelete={handleDeleteComment}
       />

@@ -38,7 +38,7 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
     handleReplySubmit,
     handleDeleteReply,
     closeModal,
-    setModalOpen,
+    setIsModalOpen,
     isModalOpen,
     selectedReplyId,
     setSelectedReplyId,
@@ -50,7 +50,7 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
   // 대댓글 삭제 모달 열기
   const openDeleteModal = (replyId: number) => {
     setSelectedReplyId(replyId);
-    setModalOpen(true);
+    setIsModalOpen(true);
   };
 
   // 대댓글 작성 요청
@@ -110,7 +110,7 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
         title="대댓글삭제"
         content="해당 대댓글을 삭제하시겠습니까?"
         modalOpen={isModalOpen}
-        setModalOpen={setModalOpen}
+        setModalOpen={setIsModalOpen}
         onClose={closeModal}
         onDelete={() => handleDeleteReply(commentId, selectedReplyId!)}
       />
