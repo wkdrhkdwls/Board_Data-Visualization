@@ -1,10 +1,5 @@
+import { PostOptionsDTO } from '@/type/PostDetail/PostDetail';
 import { EllipsisVertical } from 'lucide-react';
-
-interface PostOptionsDTO {
-  showOptions: boolean;
-  toggleOptions: () => void;
-  openModal: () => void;
-}
 
 const PostDetailOptions = ({ showOptions, toggleOptions, openModal }: PostOptionsDTO) => {
   return (

@@ -1,8 +1,6 @@
-type PostDetailTagsProps = {
-  hashtags: string[];
-};
+import { PostDetailTagsDTO } from '@/type/PostDetail/PostDetail';
 
-const PostDetailTags = ({ hashtags }: PostDetailTagsProps) => {
+const PostDetailTags = ({ hashtags }: PostDetailTagsDTO) => {
   return (
     <div className="mb-4">
       {hashtags?.map((tag, index) => (

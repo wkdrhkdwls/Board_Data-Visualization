@@ -1,11 +1,7 @@
 import { CommentReplySectionDTO } from '@/type/Comment/comment';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { formatDate } from '@/utils/changeDateTime';
 import { useAuth } from '@/hooks/useAuth';
 import DeleteModal from '@/utils/Modal/DeleteModal';
-import { EllipsisVertical, CornerDownRight } from 'lucide-react';
 import useCommentStore from '@/store/commentStore';
 import { useCommentActions } from '@/hooks/useComment';
 import { useForm } from 'react-hook-form';
@@ -28,12 +24,7 @@ const ReplySection = ({ commentId }: CommentReplySectionDTO) => {
   const [showOptions, setShowOptions] = useState<Record<number, boolean>>({});
 
   // useForm 훅을 사용하여 폼 상태를 관리
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ReplyFormDataDTO>();
+  const { reset } = useForm<ReplyFormDataDTO>();
 
   // 댓글 관련 함수들 가져오기
   const {

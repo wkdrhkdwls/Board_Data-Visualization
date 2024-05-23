@@ -1,14 +1,6 @@
 import { formatDate } from '@/utils/changeDateTime';
 import { EllipsisVertical, CornerDownRight } from 'lucide-react';
-import { ReplyType } from '@/type/Comment/comment';
-
-type ReplyItemProps = {
-  reply: ReplyType;
-  userId: string | null;
-  showOptions: Record<number, boolean>;
-  toggleOptions: (replyId: number) => void;
-  openDeleteModal: (replyId: number) => void;
-};
+import { ReplyItemProps } from '@/type/Comment/comment_reply';
 
 const ReplyItem = ({
   reply,

@@ -8,6 +8,12 @@ export type CommentType = {
   post_id: number;
 };
 
+export type CommentItemDTO = {
+  comment: CommentType;
+  userId: string | null;
+  openDeleteModal: (commentId: number) => void;
+};
+
 export type ReplyType = {
   id: number;
   nickname: string;

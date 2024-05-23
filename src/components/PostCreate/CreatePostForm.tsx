@@ -9,20 +9,10 @@ import { useToast } from '@/components/ui/use-toast';
 import { createPost } from '@/services/DashBoard/dashBoardAPI';
 import { useQueryClient } from '@tanstack/react-query';
 import FileInput from './FileInput';
-
-interface CreatePostFormProps {
-  BoardType: string;
-}
-
-interface FormData {
-  title: string;
-  content: string;
-  fileAttachment: string;
-  hashtags: string;
-}
+import { CreatePostFormDataDTO, CreatePostFormProps } from '@/type/PostCreate/PostCreate';
 
 const CreatePostForm = ({ BoardType }: CreatePostFormProps) => {
-  const { register, handleSubmit, setValue } = useForm<FormData>();
+  const { register, handleSubmit, setValue } = useForm<CreatePostFormDataDTO>();
   const { nickname } = useAuth();
   const [fileLabel, setFileLabel] = useState('');
 

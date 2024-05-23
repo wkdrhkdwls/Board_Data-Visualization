@@ -1,11 +1,5 @@
-import React from 'react';
 import { Input } from '@/components/ui/input';
-
-interface FileInputDTO {
-  fileLabel: string;
-  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  openFileSelector: () => void;
-}
+import { FileInputDTO } from '@/type/PostCreate/PostCreate';
 
 const FileInput = ({ fileLabel, onFileChange, openFileSelector }: FileInputDTO) => {
   return (

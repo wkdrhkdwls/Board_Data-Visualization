@@ -8,7 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/pageStore';
 import { getPosts } from '@/services/DashBoard/dashBoardAPI';
-import DashBoardTable from '@/utils/DashBoardTable';
+import DashBoardTable from '@/components/DashBoard/DashBoardTable';
 import { useEffect, useState } from 'react';
 
 const pageSize = 10;

@@ -1,13 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
-import { ReplyFormDataDTO } from '@/type/Comment/comment_reply';
+import { ReplyFormDataDTO, ReplyFormPropsDTO } from '@/type/Comment/comment_reply';
 
-type ReplyFormProps = {
-  onSubmit: (data: { replyContent: string }) => void;
-};
-
-const ReplyForm = ({ onSubmit }: ReplyFormProps) => {
+const ReplyForm = ({ onSubmit }: ReplyFormPropsDTO) => {
   const {
     register,
     handleSubmit,

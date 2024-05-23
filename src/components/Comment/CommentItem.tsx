@@ -1,16 +1,10 @@
 import { formatDate } from '@/utils/changeDateTime';
 import { EllipsisVertical } from 'lucide-react';
-import { CommentType } from '@/type/Comment/comment';
+import { CommentItemDTO } from '@/type/Comment/comment';
 import { useCommentActions } from '@/hooks/useComment';
 import ReplySection from '@/components/Reply/Reply';
 
-type CommentItemProps = {
-  comment: CommentType;
-  userId: string | null;
-  openDeleteModal: (commentId: number) => void;
-};
-
-const CommentItem = ({ comment, userId, openDeleteModal }: CommentItemProps) => {
+const CommentItem = ({ comment, userId, openDeleteModal }: CommentItemDTO) => {
   const { showOptions, toggleReplyInput, toggleOptions, replyVisibility } = useCommentActions(
     comment.post_id,
   ); // post_id 사용

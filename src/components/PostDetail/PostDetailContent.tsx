@@ -1,12 +1,5 @@
+import { PostContentDTO } from '@/type/PostDetail/PostDetail';
 import { getTimeDifference } from '@/utils/changeDateTime';
-
-interface PostContentDTO {
-  author: string;
-  createdAt: any;
-  views: number;
-  content: string;
-  fileAttachment: string;
-}
 
 const PostDetailContent = ({
   author,

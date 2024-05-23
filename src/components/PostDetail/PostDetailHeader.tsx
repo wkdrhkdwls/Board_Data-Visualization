@@ -1,9 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
-
-type DetailHeaderDTO = {
-  title: string;
-};
+import { DetailHeaderDTO } from '@/type/PostDetail/PostDetail';
 
 const PostDetailHeader = ({ title }: DetailHeaderDTO) => {
   const navigate = useNavigate();
