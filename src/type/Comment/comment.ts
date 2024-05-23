@@ -5,7 +5,7 @@ export type CommentType = {
   created_at: string;
   replies?: ReplyType[];
   user_id: string;
-  post_id?: number;
+  post_id: number;
 };
 
 export type CommentItemDTO = {
