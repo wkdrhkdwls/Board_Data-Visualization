@@ -5,6 +5,13 @@ export type CommentType = {
   created_at: string;
   replies?: ReplyType[];
   user_id: string;
+  post_id: number;
+};
+
+export type CommentItemDTO = {
+  comment: CommentType;
+  userId: string | null;
+  openDeleteModal: (commentId: number) => void;
 };
 
 export type ReplyType = {

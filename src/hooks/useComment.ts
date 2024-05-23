@@ -23,7 +23,7 @@ export const useCommentActions = (postId: number) => {
   const { comments, setComments, addComment, deleteComment, addReply, deleteReply } =
     useCommentStore();
   // 모달 상태와 선택된 댓글, 대댓글의 ID 상태
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
   const [selectedReplyId, setSelectedReplyId] = useState<number | null>(null);
 
@@ -33,7 +33,7 @@ export const useCommentActions = (postId: number) => {
 
   // 모달 닫기
   const closeModal = () => {
-    setModalOpen(false);
+    setIsModalOpen(false);
     setSelectedReplyId(null);
   };
 
@@ -107,7 +107,7 @@ export const useCommentActions = (postId: number) => {
       try {
         await removeCommentById(selectedCommentId);
         deleteComment(selectedCommentId);
-        setModalOpen(false);
+        setIsModalOpen(false);
         refetch();
       } catch (error: any) {
         console.error('Error deleting comment:', error.message);
@@ -120,7 +120,7 @@ export const useCommentActions = (postId: number) => {
     try {
       await removeCommentReplyById(replyId);
       deleteReply(commentId, replyId);
-      setModalOpen(false);
+      setIsModalOpen(false);
       refetch();
 
       toast({
@@ -152,7 +152,7 @@ export const useCommentActions = (postId: number) => {
     comments,
     isModalOpen,
     closeModal,
-    setModalOpen,
+    setIsModalOpen,
     setSelectedCommentId,
     setSelectedReplyId,
     selectedReplyId,

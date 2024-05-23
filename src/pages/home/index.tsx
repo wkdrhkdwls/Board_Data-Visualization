@@ -1,5 +1,5 @@
 import Layout from '@/components/layout/layout';
-import { DashBoardTable } from '@/utils/DashBoardTable';
+
 import { useQuery } from '@tanstack/react-query';
 import DashBoardHeader from '@/components/DashBoard/DashBoardHeader';
 import { Button } from '@/components/ui/button';
@@ -8,10 +8,12 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/pageStore';
 import { getPosts } from '@/services/DashBoard/dashBoardAPI';
+import DashBoardTable from '@/components/DashBoard/DashBoardTable';
+import { useEffect, useState } from 'react';
 
 const pageSize = 10;
 
-function Home() {
+const Home = () => {
   // 현재 페이지 상태관리
   const { currentPage, setCurrentPage } = usePageStore();
   const { accessToken } = useAuth();
@@ -19,6 +21,8 @@ function Home() {
   const navigate = useNavigate();
   //toast 불러오기
   const { toast } = useToast();
+
+  const [totalPages, setTotalPages] = useState(0);
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   const { data, isLoading } = useQuery({
@@ -30,7 +34,6 @@ function Home() {
   });
 
   // 전체 페이지 수 계산
-  const totalPages = data ? Math.ceil(data.total / pageSize) : 0;
 
   // 이전 페이지
   const handlePrevious = () => setCurrentPage(Math.max(currentPage - 1, 1));
@@ -53,6 +56,13 @@ function Home() {
   const goPostDetail = (postId: number) => {
     navigate(`/post/${postId}`);
   };
+
+  // 데이터가 변경될 때 전체 페이지 수 계산
+  useEffect(() => {
+    if (data) {
+      setTotalPages(Math.ceil(data.total / pageSize));
+    }
+  }, [data]);
   return (
     <Layout>
       <div className="my-10">
@@ -78,6 +88,6 @@ function Home() {
       </div>
     </Layout>
   );
-}
+};
 
 export default Home;

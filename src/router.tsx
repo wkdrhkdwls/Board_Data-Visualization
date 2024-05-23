@@ -9,8 +9,8 @@ import { Toaster } from './components/ui/toaster';
 import LoginPage from '@/pages/Login';
 import SignUpPage from '@/pages/SignUP';
 import SignUpCompletePage from '@/pages/SignUpComplete';
-import CreatePostPage from '@/pages/Post/CreatePost';
-import DetailPostPage from '@/pages/Post/DetailPost';
+import CreatePostPage from '@/pages/Post/PostCreate';
+import DetailPostPage from '@/pages/Post/PostDetail';
 import ChartPage from '@/pages/Chart';
 import ScrollToTop from '@/utils/ScrollToTop';
 
