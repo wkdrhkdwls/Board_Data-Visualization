@@ -11,9 +11,11 @@ import { useCommentActions } from '@/hooks/useComment';
 import { useForm } from 'react-hook-form';
 import { ReplyFormDataDTO } from '@/type/Comment/comment_reply';
 import usePostStore from '@/store/postStore';
+import ReplyForm from '@/components/Reply/ReplyForm';
+import ReplyItem from '@/components/Reply/ReplyItem';
 
 // 대댓글 작성 및 삭제 컴포넌트
-const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
+const ReplySection = ({ commentId }: CommentReplySectionDTO) => {
   // 현재 로그인한 사용자의 ID 가져오기
   const { userId } = useAuth();
   // 댓글 상태 가져오기
@@ -58,51 +60,23 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
     await handleReplySubmit(commentId, data.replyContent);
     reset();
   };
+
+  const toggleOptions = (replyId: number) => {
+    setShowOptions((prev) => ({ ...prev, [replyId]: !prev[replyId] }));
+  };
   return (
     <div className="ml-4 mt-2 ">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-row h-[55px] justify-between gap-x-4">
-          <Input
-            className="w-full mb-4"
-            {...register('replyContent', { required: '답글을 입력하세요' })}
-          />
-          <Button type="submit">답글 작성</Button>
-        </div>
-        {errors.replyContent && (
-          <p className="text-red-500">{String(errors.replyContent.message)}</p>
-        )}
-      </form>
+      <ReplyForm onSubmit={onSubmit} />
       <div className="ml-4 mt-2 ">
         {comment?.replies?.map((reply) => (
-          <div key={reply.id} className="my-4 py-4 gap-y-2 flex flex-col">
-            <p>
-              <CornerDownRight />
-            </p>
-            <div className="flex flex-row justify-between">
-              <p className="font-bold">{reply.nickname}</p>
-              {reply.user_id === userId && (
-                <div className="relative inline-block">
-                  <button
-                    onClick={() =>
-                      setShowOptions((prev) => ({ ...prev, [reply.id]: !prev[reply.id] }))
-                    }
-                  >
-                    <EllipsisVertical />
-                  </button>
-                  {showOptions[reply.id] && (
-                    <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
-                      <li className="p-2 cursor-pointer">수정</li>
-                      <li className="p-2 cursor-pointer" onClick={() => openDeleteModal(reply.id)}>
-                        삭제
-                      </li>
-                    </ul>
-                  )}
-                </div>
-              )}
-            </div>
-            <p>{reply.content}</p>
-            <p className="text-sm text-gray-500">{formatDate(reply.created_at)}</p>
-          </div>
+          <ReplyItem
+            key={reply.id}
+            reply={reply}
+            userId={userId}
+            showOptions={showOptions}
+            toggleOptions={toggleOptions}
+            openDeleteModal={openDeleteModal}
+          />
         ))}
       </div>
 
@@ -118,4 +92,4 @@ const CommentReplySection = ({ commentId }: CommentReplySectionDTO) => {
   );
 };
 
-export default CommentReplySection;
+export default ReplySection;

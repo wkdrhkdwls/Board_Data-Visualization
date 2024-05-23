@@ -1,15 +1,16 @@
-import CommentSection from '@/components/Reply/Comment';
+import CommentSection from '@/components/Comment/Comment';
 import Layout from '@/components/layout/layout';
 import { useAuth } from '@/hooks/useAuth';
 import { removePost, getPostById } from '@/services/DashBoard/dashBoardAPI';
 import usePostStore from '@/store/postStore';
 import DeleteModal from '@/utils/Modal/DeleteModal';
-import { getTimeDifference } from '@/utils/changeDateTime';
-import { LeftOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EllipsisVertical } from 'lucide-react';
+import PostDetailHeader from '@/components/PostDetail/PostDetailHeader';
+import PostDetailOptions from '@/components/PostDetail/PostDetailOptions';
+import PostDetailContent from '@/components/PostDetail/PostDetailContent';
+import PostDetailTags from '@/components/PostDetail/PostDetailTags';
 
 const DetailPostPage = () => {
   // 게시물의 id를 빼온다.
@@ -71,53 +72,24 @@ const DetailPostPage = () => {
       <>
         {post && (
           <div className="p-4 max-w-5xl mx-auto text-black my-10">
-            <div className="flex flex-row font-extrabold justify-between">
-              <div className="flex flex-row">
-                <button onClick={() => navigate(-1)} className="mb-2 mr-4">
-                  <LeftOutlined />
-                </button>
-                <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-              </div>
+            <div className="flex flex-row justify-between items-center">
+              <PostDetailHeader title={post.title} />
               {post.user_id === userId && (
-                <div className="relative inline-block">
-                  <button onClick={toggleOptions}>
-                    <EllipsisVertical />
-                  </button>
-                  {showOptions && (
-                    <ul className="absolute flex flex-col text-left right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
-                      <button className="p-2 cursor-pointer">수정</button>
-                      <button className="p-2 cursor-pointer" onClick={openModal}>
-                        삭제
-                      </button>
-                    </ul>
-                  )}
-                </div>
+                <PostDetailOptions
+                  showOptions={showOptions}
+                  toggleOptions={toggleOptions}
+                  openModal={openModal}
+                />
               )}
             </div>
-
-            <div className="flex flex-row  flex-grow-0 flex-shrink-0  gap-2 mb-4 text-sm">
-              <p>{post.author}</p> <p className="text-[#808080]">|</p>
-              <p>{getTimeDifference(post?.created_at)}</p> <p className="text-[#808080]">|</p>
-              <p>조회수 {post.views}</p>
-            </div>
-
-            <p className="mb-4">{post.content}</p>
-            <div className="flex flex-row mb-4">
-              <span className="font-semibold text-[#ee3918] mr-4">첨부된 파일:</span>
-              <p className="font-bold">
-                {post.file_attchment === '{}' ? post.file_attachment.split('/').pop() : null}
-              </p>
-            </div>
-            <div className="mb-4">
-              {post.hashtags?.map((tag: string, _: number) => (
-                <span
-                  key={tag}
-                  className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
+            <PostDetailContent
+              author={post.author}
+              createdAt={post.created_at}
+              views={post.views}
+              content={post.content}
+              fileAttachment={post.file_attachment || ''}
+            />
+            <PostDetailTags hashtags={post.hashtags} />
             <CommentSection />
           </div>
         )}
