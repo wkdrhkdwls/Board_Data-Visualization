@@ -1,25 +1,27 @@
 import Layout from '@/components/layout/layout';
-
 import { useQuery } from '@tanstack/react-query';
 import DashBoardHeader from '@/components/DashBoard/DashBoardHeader';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import usePageStore from '@/store/pageStore';
 import { getPosts } from '@/services/DashBoard/dashBoardAPI';
 import DashBoardTable from '@/utils/DashBoardTable';
+import { useEffect, useState } from 'react';
 
 const pageSize = 10;
 
 const Home = () => {
-  // 현재 페이지 상태관리
-  const { currentPage, setCurrentPage } = usePageStore();
   const { accessToken } = useAuth();
   //naviagte
   const navigate = useNavigate();
   //toast 불러오기
   const { toast } = useToast();
+  // 세션 스토리지에서 currentPage 가져오기
+  const storedPage = sessionStorage.getItem('currentPage');
+  const initialPage = storedPage ? parseInt(storedPage, 10) : 1;
+  // 현재 페이지 상태 관리
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   // React Query를 사용하여 데이터 가져오기 및 캐싱
   const { data, isLoading } = useQuery({
@@ -54,6 +56,11 @@ const Home = () => {
   const goPostDetail = (postId: number) => {
     navigate(`/post/${postId}`);
   };
+
+  // currentPage가 변경될 때마다 세션 스토리지에 저장
+  useEffect(() => {
+    sessionStorage.setItem('currentPage', currentPage.toString());
+  }, [currentPage]);
   return (
     <Layout>
       <div className="my-10">
