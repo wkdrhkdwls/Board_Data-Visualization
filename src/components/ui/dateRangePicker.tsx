@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { addDays, addMonths, format, setMonth, setYear } from 'date-fns';
-import { ArrowLeft, ArrowRight, Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { ko } from 'date-fns/locale';
 import '@/styles/customDatePicker.css';
@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import CalendarIcon from '@/assets/CalendarIcon.svg';
 
 export function DatePickerWithRange({ className }: React.HTMLAttributes<HTMLDivElement>) {
   const today = new Date();
@@ -54,7 +55,8 @@ export function DatePickerWithRange({ className }: React.HTMLAttributes<HTMLDivE
             )}
           >
             <div className="flex items-center">
-              <CalendarIcon className="mr-2 h-4 w-4" />
+              {/* <CalendarIcon className="mr-2 h-4 w-4" /> */}
+              <img src={CalendarIcon} alt="calendar" className="mr-2 h-4 w-4" />
               {date?.from ? (
                 date.to ? (
                   <>

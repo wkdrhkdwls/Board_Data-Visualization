@@ -17,9 +17,12 @@ const signUpFormSchema = z
     password: z
       .string()
       .min(8, { message: '8자 이상이어야합니다.' })
-      .regex(/(?=.*[A-Za-z])|(?=.*[\d$@$!%*#?&])/, {
-        message: '8자 이상, 영문자, 숫자, 특수기호중 2가지 조합',
-      }),
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])|^(?=.*[A-Za-z])(?=.*[@$!%*#?&])|^(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        {
+          message: '8자 이상, 영문자, 숫자, 특수기호 중 2가지 조합이어야 합니다.',
+        },
+      ),
     passwordConfirm: z.string(),
     nickname: z.string().min(1, { message: '닉네임은 필수적으로 입력해주어야합니다.' }),
   })

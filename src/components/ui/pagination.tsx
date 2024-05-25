@@ -43,10 +43,10 @@ const PaginationLink = ({
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       buttonVariants({
-        variant: isActive ? 'outline' : 'ghost',
+        variant: isActive ? 'pagination' : 'ghost',
         size,
       }),
-      'hover:no-underline',
+      'hover:no-underline hover:border-none',
       {
         'cursor-not-allowed opacity-50': disabled,
       },
