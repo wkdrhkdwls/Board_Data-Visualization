@@ -11,6 +11,7 @@ const ReplyForm = ({ onSubmit }: ReplyFormPropsDTO) => {
     formState: { errors },
   } = useForm<ReplyFormDataDTO>();
 
+  // 대댓글 작성
   const handleFormSubmit = async (data: { replyContent: string }) => {
     await onSubmit(data);
     reset();
