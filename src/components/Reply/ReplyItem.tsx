@@ -23,8 +23,11 @@ const ReplyItem = ({
             </button>
             {showOptions[reply.id] && (
               <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
-                <li className="p-2 cursor-pointer">수정</li>
-                <li className="p-2 cursor-pointer" onClick={() => openDeleteModal(reply.id)}>
+                <li className="p-2 cursor-pointer hover:bg-[#F9F9F9]">수정</li>
+                <li
+                  className="p-2 cursor-pointer hover:bg-[#F9F9F9]"
+                  onClick={() => openDeleteModal(reply.id)}
+                >
                   삭제
                 </li>
               </ul>

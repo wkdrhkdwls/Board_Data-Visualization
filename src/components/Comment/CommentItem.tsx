@@ -20,8 +20,11 @@ const CommentItem = ({ comment, userId, openDeleteModal }: CommentItemDTO) => {
             </button>
             {showOptions[comment.id] && (
               <ul className="absolute right-0 top-full mt-2 w-[112px] bg-white shadow-lg rounded-lg p-2 z-50">
-                <li className="p-2 cursor-pointer">수정</li>
-                <li className="p-2 cursor-pointer" onClick={() => openDeleteModal(comment.id)}>
+                <li className="p-2 cursor-pointer hover:bg-[#F9F9F9]">수정</li>
+                <li
+                  className="p-2 cursor-pointer hover:bg-[#F9F9F9]"
+                  onClick={() => openDeleteModal(comment.id)}
+                >
                   삭제
                 </li>
               </ul>
