@@ -24,15 +24,13 @@
 위어드섹터에서 제공한 피그마 및 기능 요청사항에 따른 게시판 CRUD와 D3.js를 사용한 데이터 시각화 그래프를 그리는 프로젝트입니다. DataBase는 Supabase를 사용하여 구현하였습니다.
 ![위어드섹터](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/9a521168-0d06-4b0e-ac52-b35d169f0b1e)
 
-
-
 ## 결과물
+
 ![1](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/248890e1-4b26-45ce-9508-050db32ef7c0)
 ![2](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/2ad39c4e-7152-4a2f-8517-d5ee695681ae)
 ![3](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/304cc7ad-532f-4409-911f-87afcb31b03d)
 ![4](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/59c9f1f0-91a5-4489-a36e-11634991835d)
 ![5](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/c1294740-08fc-4872-b264-e35870338ccf)
-
 
 ### 주요 기능
 
@@ -72,9 +70,14 @@ Mini/
 │ ├── assets/ # 이미지, 폰트 등 정적 자원
 │ ├── components/ # React 컴포넌트
 │ │ ├── Chart/ # 차트 컴포넌트
+│ │ ├── Comment/ # 댓글 컴포넌트
 │ │ ├── DashBoard/ # 대시보드 컴포넌트
 │ │ ├── layout/ # 레이아웃 컴포넌트
+│ │ ├── Login/ # 레이아웃 컴포넌트
+│ │ ├── PostCreate/ # 게시물 작성 컴포넌트
+│ │ ├── PostDetail/ # 게시물 내용 컴포넌트
 │ │ ├── Reply/ # 댓글 컴포넌트
+│ │ ├── SignUp/ # 회원가입 컴포넌트
 │ │ └── ui/ # UI 관련 컴포넌트  
 │ ├── hooks/ # 커스텀 훅
 │ ├── lib/ # 라이브러리 및 헬퍼 함수
