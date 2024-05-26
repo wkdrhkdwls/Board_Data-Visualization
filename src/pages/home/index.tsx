@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/pageStore';
-import { getPosts } from '@/services/DashBoard/dashBoardAPI';
+import { getDashBoardTypePosts, getPosts } from '@/services/DashBoard/dashBoardAPI';
 import DashBoardTable from '@/components/DashBoard/DashBoardTable';
 import { useEffect, useState } from 'react';
 
@@ -29,7 +29,7 @@ const Home = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard', currentPage, selectedBoard],
-    queryFn: () => getPosts(currentPage, pageSize, selectedBoard),
+    queryFn: () => getDashBoardTypePosts(currentPage, pageSize, selectedBoard),
     placeholderData: (previousData) => previousData,
     staleTime: 1000 * 60 * 5,
     gcTime: 10 * 60 * 1000,

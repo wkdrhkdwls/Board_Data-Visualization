@@ -26,8 +26,22 @@ export const createPost = async (postData: PostCreateDTO): Promise<PostDTO> => {
   return data;
 };
 
+// 페이지 번호화 페이지 크기에 따라 게시물을 가져오는 함수
+export const getPosts = async (page: number, pageSize: number): Promise<FetchDataDTo> => {
+  const from = (page - 1) * pageSize;
+  const to = page * pageSize - 1;
+  const { data, error, count } = await supabase
+    .from('dashboard')
+    .select('*', { count: 'exact' })
+    .order('id', { ascending: false })
+    .range(from, to);
+
+  if (error) throw new Error(error.message);
+  return { posts: data || [], total: count || 0 };
+};
+
 // 페이지 번호, 페이지 크기, 게시판 유형에 따라 게시물을 가져오는 함수
-export const getPosts = async (
+export const getDashBoardTypePosts = async (
   page: number,
   pageSize: number,
   selectedBoard: string,
