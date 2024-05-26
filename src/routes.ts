@@ -1,5 +1,9 @@
 export const pageRoutes = {
   main: '/',
-  example: '/example',
-  example2: '/example2',
+  login: '/login',
+  signUp: '/signup',
+  signUpComplete: '/signup-complete',
+  createPost: '/create-post',
+  detailPost: '/post/:id',
+  chart: '/chart',
 } as const;

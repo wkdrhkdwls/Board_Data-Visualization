@@ -13,14 +13,19 @@ import { CreatePostFormDataDTO, CreatePostFormProps } from '@/type/PostCreate/Po
 
 const CreatePostForm = ({ BoardType }: CreatePostFormProps) => {
   const { register, handleSubmit, setValue } = useForm<CreatePostFormDataDTO>();
+  // 사용자 닉네임
   const { nickname } = useAuth();
+  // 파일 첨부 상태
   const [fileLabel, setFileLabel] = useState('');
 
   const { toast } = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  // 랜덤 조회수 생성
   const randomViews = Math.floor(Math.random() * 100) + 1;
 
+  // 파일 첨부 시 파일명 변경
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (file) {
@@ -29,6 +34,7 @@ const CreatePostForm = ({ BoardType }: CreatePostFormProps) => {
     }
   };
 
+  // 게시글 작성 요청
   const handleCreatePost = async (formData: any) => {
     // 실제로 Input에 입력된 데이터
     const { title, content, fileAttachment, hashtags } = formData;
@@ -45,7 +51,6 @@ const CreatePostForm = ({ BoardType }: CreatePostFormProps) => {
       boardType: BoardType || '',
     };
 
-    // 게시글 작성 요청
     try {
       const data = await createPost(postData);
       console.log('Post created successfully:', data);
@@ -72,6 +77,7 @@ const CreatePostForm = ({ BoardType }: CreatePostFormProps) => {
     }
   };
 
+  // 파일 첨부 버튼 클릭 시 파일 선택 창 열기
   const openFileSelector = () => {
     const fileInput = document.getElementById('fileAttachment') as HTMLInputElement;
     if (fileInput) {
