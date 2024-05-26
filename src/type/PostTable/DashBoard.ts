@@ -31,3 +31,8 @@ export type PostCountByDateDTO = {
   date: string;
   count: number;
 };
+
+export type DashBoardHeaderDTO = {
+  selectedBoard: string;
+  onBoardSelect: (board: string) => void;
+};

@@ -40,6 +40,25 @@ export const getPosts = async (page: number, pageSize: number): Promise<FetchDat
   return { posts: data || [], total: count || 0 };
 };
 
+// 페이지 번호, 페이지 크기, 게시판 유형에 따라 게시물을 가져오는 함수
+export const getDashBoardTypePosts = async (
+  page: number,
+  pageSize: number,
+  selectedBoard: string,
+): Promise<FetchDataDTo> => {
+  const from = (page - 1) * pageSize;
+  const to = page * pageSize - 1;
+  const { data, error, count } = await supabase
+    .from('dashboard')
+    .select('*', { count: 'exact' })
+    .eq('boardType', selectedBoard) // board_type으로 필터링
+    .order('id', { ascending: false })
+    .range(from, to);
+
+  if (error) throw new Error(error.message);
+  return { posts: data || [], total: count || 0 };
+};
+
 // 날짜별로 그룹화된 게시물 데이터를 가져오는 함수
 export const getPostsGroupedByDate = async (): Promise<PostCountByDateDTO[]> => {
   const { data, error } = await supabase.from('dashboard').select('created_at');

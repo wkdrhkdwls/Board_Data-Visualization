@@ -7,66 +7,65 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/pageStore';
-import { getPosts } from '@/services/DashBoard/dashBoardAPI';
+import { getDashBoardTypePosts } from '@/services/DashBoard/dashBoardAPI';
 import DashBoardTable from '@/components/DashBoard/DashBoardTable';
 import { useEffect, useState } from 'react';
 
 const pageSize = 10;
 
 const Home = () => {
-  // 현재 페이지 상태관리
   const { currentPage, setCurrentPage } = usePageStore();
   const { accessToken } = useAuth();
-  //naviagte
   const navigate = useNavigate();
-  //toast 불러오기
   const { toast } = useToast();
 
   const [totalPages, setTotalPages] = useState(0);
-
-  // React Query를 사용하여 데이터 가져오기 및 캐싱
-  const { data, isLoading } = useQuery({
-    queryKey: ['dashboard', currentPage],
-    queryFn: () => getPosts(currentPage, pageSize),
-    placeholderData: (previousData) => previousData, //이전 데이터 유지
-    staleTime: 1000 * 60 * 5, // refresh 5분
-    gcTime: 10 * 60 * 1000, //캐시 테이터 10분
+  const [selectedBoard, setSelectedBoard] = useState<string>(() => {
+    const saved = sessionStorage.getItem('selectedBoard');
+    return saved ? saved : '자유 게시판';
   });
 
-  // 전체 페이지 수 계산
+  console.log('selectedBoard', selectedBoard);
 
-  // 이전 페이지
-  const handlePrevious = () => setCurrentPage(Math.max(currentPage - 1, 1));
-  // 다음 페이지
-  const handleNext = () => setCurrentPage(Math.min(currentPage + 1, totalPages));
-  // 글쓰기 페이지 이동
-  const handleCreatePost = () => {
-    if (!accessToken) {
-      toast({
-        title: '로그인이 필요합니다.',
-        duration: 3000,
-      });
-      navigate('/login');
-    } else {
-      navigate('/create-post');
-    }
-  };
+  const { data, isLoading } = useQuery({
+    queryKey: ['dashboard', currentPage, selectedBoard],
+    queryFn: () => getDashBoardTypePosts(currentPage, pageSize, selectedBoard),
+    placeholderData: (previousData) => previousData,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 10 * 60 * 1000,
+  });
 
-  // 글 상세 페이지 이동
-  const goPostDetail = (postId: number) => {
-    navigate(`/post/${postId}`);
-  };
-
-  // 데이터가 변경될 때 전체 페이지 수 계산
   useEffect(() => {
     if (data) {
       setTotalPages(Math.ceil(data.total / pageSize));
     }
   }, [data]);
+
+  const handlePrevious = () => setCurrentPage(Math.max(currentPage - 1, 1));
+  const handleNext = () => setCurrentPage(Math.min(currentPage + 1, totalPages));
+  const handleCreatePost = () => {
+    if (!accessToken) {
+      toast({ title: '로그인이 필요합니다.', duration: 3000 });
+      navigate('/login');
+    } else {
+      navigate('/create-post');
+    }
+  };
+  const goPostDetail = (postId: number) => navigate(`/post/${postId}`);
+
+  const handleBoardSelect = (board: string) => {
+    setSelectedBoard(board);
+    setCurrentPage(1);
+  };
+
+  useEffect(() => {
+    sessionStorage.setItem('selectedBoard', selectedBoard);
+  }, [selectedBoard]);
+
   return (
     <Layout>
       <div className="my-10">
-        <DashBoardHeader />
+        <DashBoardHeader selectedBoard={selectedBoard} onBoardSelect={handleBoardSelect} />
         <div className="relative mx-[390px] mobile:mx-2 tablet:mx-[20px] flex justify-center flex-col">
           <DashBoardTable
             posts={data?.posts || []}

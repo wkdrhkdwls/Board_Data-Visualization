@@ -78,11 +78,22 @@ const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
     svg
       .select<SVGGElement>('.x-axis')
       .style('transform', `translateY(${height - PADDING}px)`)
-      .call(xAxis);
+      .call(xAxis)
+      .selectAll('line')
+      .attr('y1', -height + 2 * PADDING)
+      .attr('stroke-width', '0'); // 그리드를 위로 확장
 
     // y축 생성
-    const yAxis = axisLeft(yScale).ticks(7);
-    svg.select<SVGGElement>('.y-axis').style('transform', `translateX(${PADDING}px)`).call(yAxis);
+    const yAxis = axisLeft(yScale)
+      .ticks(7)
+      .tickSize(-width + 2 * PADDING);
+    svg
+      .select<SVGGElement>('.y-axis')
+      .style('transform', `translateX(${PADDING}px)`)
+      .call(yAxis)
+      .selectAll('line')
+      .attr('stroke', '#ddd')
+      .attr('stroke-dasharray', '4 2'); // 점선으로 설정
 
     // 라인 생성
     const lineGenerator = line<{ date: Date; count: number }>()
@@ -116,7 +127,7 @@ const DatePostsLineChart = ({ dateData }: LineChartDTO) => {
     const legend = svg
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', `translate(${width - PADDING - 100}, ${PADDING})`);
+      .attr('transform', `translate(${width - PADDING - 100}, ${PADDING - 30})`);
 
     legend.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 6).style('fill', '#f99');
 
