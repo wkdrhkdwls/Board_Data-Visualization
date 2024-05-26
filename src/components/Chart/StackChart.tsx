@@ -8,7 +8,6 @@ import {
   stack,
   stackOrderNone,
   stackOffsetNone,
-  range,
 } from 'd3';
 import { useResize } from '@/hooks/useResize';
 import { StackProps, StackedDataDTO } from '@/type/Chart/Chart';
@@ -51,11 +50,7 @@ const StackedBarChart = ({ data }: StackProps) => {
     const yScale = scaleLinear()
       .domain([
         0,
-        Math.ceil(
-          Math.max(
-            ...data.map((d) => keys.reduce((acc, key) => acc + ((d[key] as number) || 0), 0)),
-          ) / 50,
-        ) * 50,
+        Math.max(...data.map((d) => keys.reduce((acc, key) => acc + ((d[key] as number) || 0), 0))),
       ])
       .range([height - PADDING, PADDING]);
 
@@ -68,12 +63,17 @@ const StackedBarChart = ({ data }: StackProps) => {
       .call(xAxis);
 
     // y축 생성
-    const yAxis = axisLeft(yScale).tickValues(range(0, Math.max(...yScale.domain()) + 1, 50));
+    const yAxis = axisLeft(yScale)
+      .ticks(7)
+      .tickSize(-width + 2 * PADDING);
     svg
       .append('g')
       .attr('class', 'y-axis')
       .attr('transform', `translate(${PADDING},0)`)
-      .call(yAxis);
+      .call(yAxis)
+      .selectAll('line')
+      .attr('stroke', '#ddd')
+      .attr('stroke-dasharray', '4 2'); // 점선으로 설정
 
     // 데이터 스택
     const stackedData = stack<StackedDataDTO>()
@@ -103,7 +103,10 @@ const StackedBarChart = ({ data }: StackProps) => {
       .enter()
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', (_, i) => `translate(${width - PADDING - 300 + i * 100}, ${PADDING / 2})`);
+      .attr(
+        'transform',
+        (_, i) => `translate(${width - PADDING - 300 + i * 100}, ${PADDING - 30})`,
+      );
 
     legend
       .append('circle')

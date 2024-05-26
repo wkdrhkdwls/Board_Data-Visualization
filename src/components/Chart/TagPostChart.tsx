@@ -7,6 +7,7 @@ const TagPostsBlockChart = ({ data }: BlockChartDTO) => {
   // svg 엘리먼트와 root 엘리먼트의 ref
   const svgRef = useRef<SVGSVGElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const legendRef = useRef<SVGSVGElement>(null);
   // 창 크기 변경 감지 후 차트 그리기
   const size = useResize(rootRef);
 
@@ -23,6 +24,7 @@ const TagPostsBlockChart = ({ data }: BlockChartDTO) => {
 
     // svg 엘리먼트 선택
     const svg = select(svgRef.current);
+    const legend = select(legendRef.current);
 
     // y축 도메인을 위한 최대 카운트 계산
     const maxCount = Math.max(...data.map((d) => d.count));
@@ -30,8 +32,8 @@ const TagPostsBlockChart = ({ data }: BlockChartDTO) => {
     // x축 스케일 설정
     const xScale = scaleBand()
       .domain(data.map((d) => `#${d.tag}`))
-      .range([PADDING, width - PADDING])
-      .padding(0.2);
+      .range([PADDING, Math.max(width, data.length * 100) - PADDING]) // 데이터 양에 따라 동적 설정
+      .padding(0.4);
 
     // y축 스케일 설정(선형)
     const yScale = scaleLinear()
@@ -46,8 +48,16 @@ const TagPostsBlockChart = ({ data }: BlockChartDTO) => {
       .call(xAxis);
 
     // y축 생성(눈금)
-    const yAxis = axisLeft(yScale).ticks(7);
-    svg.select<SVGGElement>('.y-axis').style('transform', `translateX(${PADDING}px)`).call(yAxis);
+    const yAxis = axisLeft(yScale)
+      .ticks(7)
+      .tickSize(-Math.max(width, data.length * 100) + 2 * PADDING); // 동적 설정
+    svg
+      .select<SVGGElement>('.y-axis')
+      .style('transform', `translateX(${PADDING}px)`)
+      .call(yAxis)
+      .selectAll('line')
+      .attr('stroke', '#ddd')
+      .attr('stroke-dasharray', '4 2'); // 점선으로 설정
 
     // 막대 그래프 그리기
     svg
@@ -62,14 +72,15 @@ const TagPostsBlockChart = ({ data }: BlockChartDTO) => {
       .attr('fill', '#f99');
 
     // 범례 추가
-    const legend = svg
+    legend.selectAll('*').remove();
+    const legendGroup = legend
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', `translate(${width - PADDING - 100}, ${PADDING})`);
+      .attr('transform', `translate(${width - 150}, 20)`);
 
-    legend.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 6).style('fill', '#f99');
+    legendGroup.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 6).style('fill', '#f99');
 
-    legend
+    legendGroup
       .append('text')
       .attr('x', 10)
       .attr('y', 0)
@@ -81,10 +92,13 @@ const TagPostsBlockChart = ({ data }: BlockChartDTO) => {
   return (
     <div ref={rootRef} className="w-full min-h-64 border border-[#eee] p-4">
       <h2 className="font-bold">해시태그별 게시글 등록 수</h2>
-      <svg ref={svgRef} width={size.width} height={size.height}>
-        <g className="x-axis" />
-        <g className="y-axis" />
-      </svg>
+      <svg ref={legendRef} className="legend-svg w-full" width={200} height={50}></svg>
+      <div className="overflow-x-auto">
+        <svg ref={svgRef} width={Math.max(size.width, data.length * 100)} height={size.height}>
+          <g className="x-axis" />
+          <g className="y-axis" />
+        </svg>
+      </div>
     </div>
   );
 };

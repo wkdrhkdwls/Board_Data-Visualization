@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import usePageStore from '@/store/pageStore';
-import { getDashBoardTypePosts, getPosts } from '@/services/DashBoard/dashBoardAPI';
+import { getDashBoardTypePosts } from '@/services/DashBoard/dashBoardAPI';
 import DashBoardTable from '@/components/DashBoard/DashBoardTable';
 import { useEffect, useState } from 'react';
 
