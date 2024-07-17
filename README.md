@@ -1,21 +1,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="src/assets/Logo.svg" alt="Logo" width="80" height="80">
-  </a>
-
-  
-
   <p align="center">
     <br />
     ~~[배포 페이지](https://miniinterntest.netlify.app/)~~
 **supabase이슈로 수정중**
 
-    ·
-    <a href="https://github.com/wkdrhkdwls/Board_Data-Visualization/issues/new?assignees=&labels=bug&projects=&template=%EB%B2%84%EA%B7%B8-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%9D%B4%EC%8A%88.md&title=">버그 리포트 작성하기</a>
-    ·
-    <a href="https://github.com/wkdrhkdwls/Board_Data-Visualization/issues/new?assignees=&labels=documentation%2C+enhancement&projects=&template=%EA%B8%B0%EB%8A%A5-%EC%9A%94%EC%B2%AD-%EC%9D%B4%EC%8A%88.md&title=">기능 요청사항 작성하기</a>
+<a href="https://github.com/wkdrhkdwls/Board_Data-Visualization/issues/new?assignees=&labels=bug&projects=&template=%EB%B2%84%EA%B7%B8-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%9D%B4%EC%8A%88.md&title=">버그 리포트 작성하기</a>
+·
+ <a href="https://github.com/wkdrhkdwls/Board_Data-Visualization/issues/new?assignees=&labels=documentation%2C+enhancement&projects=&template=%EA%B8%B0%EB%8A%A5-%EC%9A%94%EC%B2%AD-%EC%9D%B4%EC%8A%88.md&title=">기능 요청사항 작성하기</a>
+  ·
+   
   </p>
 </div>
 
@@ -23,8 +18,7 @@
 
 ## 프로젝트 설명
 
-위어드섹터에서 제공한 피그마 및 기능 요청사항에 따른 게시판 CRUD와 D3.js를 사용한 데이터 시각화 그래프를 그리는 프로젝트입니다. DataBase는 Supabase를 사용하여 구현하였습니다.
-![위어드섹터](https://github.com/wkdrhkdwls/MiniIntern_weirdsector/assets/79461880/9a521168-0d06-4b0e-ac52-b35d169f0b1e)
+피그마 및 기능 요청사항에 따른 게시판 CRUD와 D3.js를 사용한 데이터 시각화 그래프를 그리는 프로젝트입니다. DataBase는 Supabase를 사용하여 구현하였습니다.
 
 ## 결과물
 
