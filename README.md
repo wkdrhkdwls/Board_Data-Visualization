@@ -5,15 +5,17 @@
     <img src="src/assets/Logo.svg" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">미니인턴 위어드섹터 프로젝트</h3>
+  
 
   <p align="center">
     <br />
-    <a href="https://miniinterntest.netlify.app/">배포 페이지</a>
+    ~~[배포 페이지](https://miniinterntest.netlify.app/)~~
+**supabase이슈로 수정중**
+
     ·
-    <a href="https://github.com/wkdrhkdwls/MiniIntern_weirdsector/issues/new?assignees=&labels=bug&projects=&template=%EB%B2%84%EA%B7%B8-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%9D%B4%EC%8A%88.md&title=">버그 리포트 작성하기</a>
+    <a href="https://github.com/wkdrhkdwls/Board_Data-Visualization/issues/new?assignees=&labels=bug&projects=&template=%EB%B2%84%EA%B7%B8-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%9D%B4%EC%8A%88.md&title=">버그 리포트 작성하기</a>
     ·
-    <a href="https://github.com/wkdrhkdwls/MiniIntern_weirdsector/issues/new?assignees=&labels=documentation%2C+enhancement&projects=&template=%EA%B8%B0%EB%8A%A5-%EC%9A%94%EC%B2%AD-%EC%9D%B4%EC%8A%88.md&title=">기능 요청사항 작성하기</a>
+    <a href="https://github.com/wkdrhkdwls/Board_Data-Visualization/issues/new?assignees=&labels=documentation%2C+enhancement&projects=&template=%EA%B8%B0%EB%8A%A5-%EC%9A%94%EC%B2%AD-%EC%9D%B4%EC%8A%88.md&title=">기능 요청사항 작성하기</a>
   </p>
 </div>
 
