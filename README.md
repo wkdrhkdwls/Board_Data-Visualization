@@ -3,7 +3,7 @@
 <div align="center">
   <p align="center">
     <br />
-   <a href="https://miniinterntest.netlify.app">배포 페이지</a>
+   <a href="https://boardgraph.netlify.app/">배포 페이지</a>
 
 <a href="https://github.com/wkdrhkdwls/Board_Data-Visualization/issues/new?assignees=&labels=bug&projects=&template=%EB%B2%84%EA%B7%B8-%EB%A6%AC%ED%8F%AC%ED%8A%B8-%EC%9D%B4%EC%8A%88.md&title=">버그 리포트 작성하기</a>
 ·
